@@ -1,5 +1,3 @@
-import { CustomResourceLoader } from '@nguniversal/common/clover/server/src/custom-resource-loader';
-import { createFetch } from '@angular-architects/module-federation/nguniversal';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,

@@ -29,13 +29,9 @@
 						"styles": [
 							"src/styles.scss"
 						],
-						"outputMode": "server",
-						"ssr": {
-							"entry": "src/server.ts"
-						},
 						"main": "src/main.ts",
 						"outputPath": "dist/vyracare-app-dashboard-mfe",
-						"index": "src\\index.html",
+						"index": "src/index.html",
 						"extraWebpackConfig": "webpack.config.js",
 						"commonChunk": false
 					},

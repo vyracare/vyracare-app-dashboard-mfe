@@ -1,4 +1,37 @@
-.dashboard { 
-    padding: 20px; 
-    font-family: Arial; 
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+:host {
+  display: block;
+}
+
+.dashboard {
+  --primary: #5a3be7;
+  --accent: #ff6c88;
+  --sky: #5ac4ff;
+  --ink: #333b60;
+  --muted: #6f7494;
+  --card: #ffffff;
+  --stroke: rgba(90, 59, 231, 0.12);
+  --shadow: 0 20px 45px rgba(44, 56, 120, 0.16);
+
+  font-family: "Manrope", sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 2.5rem 3rem 3rem;
+  background:
+    radial-gradient(900px 420px at 5% -10%, rgba(90, 59, 231, 0.2), transparent 60%),
+    radial-gradient(800px 420px at 90% 0%, rgba(90, 196, 255, 0.22), transparent 55%),
+    #f6f4ff;
+}
+
+@media (max-width: 1024px) {
+  .dashboard {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard {
+    padding: 1.5rem;
+  }
 }

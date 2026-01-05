@@ -1,0 +1,135 @@
+:host {
+  display: block;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+  gap: 2.5rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--primary);
+    background: #ffffff;
+    border: 1px solid var(--stroke);
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    width: fit-content;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 2.4rem;
+    line-height: 1.15;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  a {
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.75rem 1.4rem;
+    border-radius: 999px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .primary-action {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #ffffff;
+    box-shadow: 0 12px 25px rgba(90, 59, 231, 0.25);
+  }
+
+  .ghost-action {
+    color: var(--primary);
+    border: 1px solid rgba(90, 59, 231, 0.25);
+    background: #ffffff;
+  }
+
+  a:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.hero-metrics {
+  display: grid;
+  gap: 1rem;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 1.1rem 1.3rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  span {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  strong {
+    font-size: 1.6rem;
+  }
+
+  small {
+    color: var(--muted);
+  }
+
+  &.highlight {
+    background: linear-gradient(135deg, rgba(90, 59, 231, 0.95), rgba(255, 108, 136, 0.95));
+    color: #ffffff;
+
+    span,
+    small {
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+
+  &.soft {
+    background: linear-gradient(135deg, #ffffff, #eef3ff);
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-copy h1 {
+    font-size: 2rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

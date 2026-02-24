@@ -5,6 +5,10 @@ on:
     branches:
       - develop  # Dispara quando houver merge na develop
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish:
     uses: vyracare/vyracare-infra-pipes-angular/.github/workflows/cd-angular.yml@main

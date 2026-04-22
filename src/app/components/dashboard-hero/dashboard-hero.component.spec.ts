@@ -1,6 +1,6 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { DashboardHeroComponent } from './dashboard-hero.component';
 
 describe('DashboardHeroComponent', () => {
@@ -24,5 +24,15 @@ describe('DashboardHeroComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const actions = compiled.querySelectorAll('.hero-actions vc-button');
     expect(actions.length).toBe(2);
+  });
+
+  it('should navigate to the requested path', () => {
+    const fixture = TestBed.createComponent(DashboardHeroComponent);
+    const router = TestBed.inject(Router);
+    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+
+    fixture.componentInstance.navigateTo('/agenda/novo');
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/agenda/novo']);
   });
 });

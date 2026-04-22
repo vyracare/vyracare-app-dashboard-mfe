@@ -34,6 +34,26 @@
   }
 }
 
+:host ::ng-deep .panel-header vc-heading .vc-heading {
+  margin: 0 0 0.35rem;
+  color: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+:host ::ng-deep .panel-header vc-text .vc-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+:host ::ng-deep .panel-header vc-button .vc-button__inner,
+:host ::ng-deep .finance-card vc-button .vc-button__inner {
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+}
+
 .finance-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -91,6 +111,34 @@
   &.neutral {
     background: linear-gradient(135deg, #ffffff, rgba(90, 59, 231, 0.1));
   }
+}
+
+:host ::ng-deep vc-card.finance-card > .vc-card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+}
+
+:host ::ng-deep vc-card.finance-card .vc-card__header {
+  margin-bottom: 0;
+}
+
+:host ::ng-deep vc-card.finance-card .vc-card__title {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+:host ::ng-deep vc-card.finance-card .vc-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  color: inherit;
 }
 
 @media (max-width: 1024px) {

@@ -15,14 +15,14 @@ describe('DashboardQuickAccessComponent', () => {
     const fixture = TestBed.createComponent(DashboardQuickAccessComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h2')?.textContent).toContain('Acesso rapido');
+    expect(compiled.textContent).toContain('Acesso rapido');
   });
 
   it('should list four quick access cards', () => {
     const fixture = TestBed.createComponent(DashboardQuickAccessComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    const cards = compiled.querySelectorAll('.quick-card');
+    const cards = compiled.querySelectorAll('vc-card-button');
     expect(cards.length).toBe(4);
   });
 });

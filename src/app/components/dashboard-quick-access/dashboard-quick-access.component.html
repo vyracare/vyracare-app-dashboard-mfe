@@ -1,43 +1,35 @@
 <section class="panel">
   <div class="panel-header">
     <div>
-      <h2>Acesso rapido</h2>
-      <p>Atalhos para criar novos cadastros e agilizar o fluxo da equipe.</p>
+      <vc-heading [level]="2">Acesso rapido</vc-heading>
+      <vc-text muted>Atalhos para criar novos cadastros e agilizar o fluxo da equipe.</vc-text>
     </div>
   </div>
 
   <div class="card-grid">
-    <a class="quick-card" routerLink="/cadastro/pacientes">
-      <div class="card-icon">CP</div>
-      <div class="card-content">
-        <strong>Cadastro de pacientes</strong>
-        <span>Prontuarios e historico clinico</span>
-      </div>
-      <span class="card-action">&gt;</span>
-    </a>
-    <a class="quick-card" routerLink="/cadastro/funcionarios">
-      <div class="card-icon">PR</div>
-      <div class="card-content">
-        <strong>Cadastro de profissionais</strong>
-        <span>Equipe, especialidades e horarios</span>
-      </div>
-      <span class="card-action">&gt;</span>
-    </a>
-    <a class="quick-card" routerLink="/cadastros/procedimentos">
-      <div class="card-icon">PC</div>
-      <div class="card-content">
-        <strong>Cadastro de procedimentos</strong>
-        <span>Tabelas, precos e regras</span>
-      </div>
-      <span class="card-action">&gt;</span>
-    </a>
-    <a class="quick-card" routerLink="/cadastros/convenios">
-      <div class="card-icon">CV</div>
-      <div class="card-content">
-        <strong>Cadastro de convenios</strong>
-        <span>Contratos e autorizacoes</span>
-      </div>
-      <span class="card-action">&gt;</span>
-    </a>
+    <vc-card-button
+      href="/cadastro/pacientes"
+      badgeText="CP"
+      title="Cadastro de pacientes"
+      subtitle="Prontuarios e historico clinico"
+    ></vc-card-button>
+    <vc-card-button
+      href="/cadastro/funcionarios"
+      badgeText="PR"
+      title="Cadastro de profissionais"
+      subtitle="Equipe, especialidades e horarios"
+    ></vc-card-button>
+    <vc-card-button
+      href="/cadastros/procedimentos"
+      badgeText="PC"
+      title="Cadastro de procedimentos"
+      subtitle="Tabelas, precos e regras"
+    ></vc-card-button>
+    <vc-card-button
+      href="/cadastros/convenios"
+      badgeText="CV"
+      title="Cadastro de convenios"
+      subtitle="Contratos e autorizacoes"
+    ></vc-card-button>
   </div>
 </section>

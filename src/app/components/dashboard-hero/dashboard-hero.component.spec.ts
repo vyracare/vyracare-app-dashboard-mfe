@@ -15,14 +15,14 @@ describe('DashboardHeroComponent', () => {
     const fixture = TestBed.createComponent(DashboardHeroComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Visao geral');
+    expect(compiled.textContent).toContain('Visao geral');
   });
 
   it('should show two primary actions', () => {
     const fixture = TestBed.createComponent(DashboardHeroComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    const actions = compiled.querySelectorAll('.hero-actions a');
+    const actions = compiled.querySelectorAll('.hero-actions vc-button');
     expect(actions.length).toBe(2);
   });
 });

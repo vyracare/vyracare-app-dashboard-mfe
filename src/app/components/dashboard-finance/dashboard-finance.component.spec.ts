@@ -15,7 +15,7 @@ describe('DashboardFinanceComponent', () => {
     const fixture = TestBed.createComponent(DashboardFinanceComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h2')?.textContent).toContain('Saude financeira');
+    expect(compiled.textContent).toContain('Saude financeira');
   });
 
   it('should show three finance cards', () => {

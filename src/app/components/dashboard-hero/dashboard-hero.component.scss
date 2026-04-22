@@ -44,6 +44,20 @@
   }
 }
 
+:host ::ng-deep .hero-copy vc-heading .vc-heading {
+  margin: 0;
+  color: inherit;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+:host ::ng-deep .hero-copy vc-text .vc-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -72,6 +86,24 @@
   a:hover {
     transform: translateY(-2px);
   }
+}
+
+:host ::ng-deep .hero-actions vc-button .vc-button__inner {
+  border-radius: 999px;
+  padding: 0.75rem 1.4rem;
+}
+
+:host ::ng-deep .hero-actions vc-button.vc-button--primary .vc-button__inner {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  box-shadow: 0 12px 25px rgba(90, 59, 231, 0.25);
+}
+
+:host ::ng-deep .hero-actions vc-button.vc-button--secondary .vc-button__inner {
+  background: #ffffff;
+  color: var(--primary);
+  border: 1px solid rgba(90, 59, 231, 0.25);
+  box-shadow: none;
 }
 
 .hero-metrics {
@@ -117,6 +149,26 @@
   }
 }
 
+:host ::ng-deep vc-card.metric-card > .vc-card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+}
+
+:host ::ng-deep vc-card.metric-card .vc-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: inherit;
+}
+
+:host ::ng-deep vc-card.metric-card.highlight .vc-card__body {
+  color: #ffffff;
+}
+
 @media (max-width: 1024px) {
   .hero {
     grid-template-columns: 1fr;
@@ -124,7 +176,8 @@
 }
 
 @media (max-width: 640px) {
-  .hero-copy h1 {
+  .hero-copy h1,
+  :host ::ng-deep .hero-copy vc-heading .vc-heading {
     font-size: 2rem;
   }
 

@@ -35,6 +35,20 @@
   }
 }
 
+:host ::ng-deep .panel-header vc-heading .vc-heading {
+  margin: 0 0 0.35rem;
+  color: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+:host ::ng-deep .panel-header vc-text .vc-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -102,6 +116,52 @@
     transform: translateX(2px);
     box-shadow: 0 12px 24px rgba(90, 59, 231, 0.3);
   }
+}
+
+:host ::ng-deep vc-card-button .vc-card-button {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(90, 59, 231, 0.12);
+  background: #ffffff;
+  color: inherit;
+  box-shadow: none;
+}
+
+:host ::ng-deep vc-card-button .vc-card-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(44, 56, 120, 0.15);
+}
+
+:host ::ng-deep vc-card-button .vc-card-button__badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--sky));
+  color: #ffffff;
+}
+
+:host ::ng-deep vc-card-button .vc-card-button__title {
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+:host ::ng-deep vc-card-button .vc-card-button__subtitle {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+:host ::ng-deep vc-card-button .vc-card-button__action {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(90, 59, 231, 0.2);
 }
 
 @media (max-width: 1024px) {

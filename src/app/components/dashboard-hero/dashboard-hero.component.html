@@ -12,18 +12,18 @@
   <div class="hero-metrics">
     <vc-card class="metric-card highlight">
       <span>Atendimentos hoje</span>
-      <strong>18</strong>
-      <small>+4 confirmados nas ultimas 2h</small>
+      <strong>{{ loading() ? '—' : (summary()?.appointmentsToday?.total ?? 0) }}</strong>
+      <small>+{{ summary()?.appointmentsToday?.confirmedLastTwoHours ?? 0 }} confirmados nas últimas 2h</small>
     </vc-card>
     <vc-card class="metric-card">
       <span>Retornos pendentes</span>
-      <strong>6</strong>
-      <small>Agende nos proximos 3 dias</small>
+      <strong>{{ loading() ? '—' : (summary()?.pendingReturns?.total ?? 0) }}</strong>
+      <small>Agende nos próximos {{ summary()?.pendingReturns?.windowDays ?? 3 }} dias</small>
     </vc-card>
     <vc-card class="metric-card soft">
-      <span>Taxa de ocupacao</span>
-      <strong>82%</strong>
-      <small>Media semanal</small>
+      <span>Taxa de ocupação</span>
+      <strong>{{ loading() ? '—' : (summary()?.weeklyOccupancy?.percentage ?? 0) + '%' }}</strong>
+      <small>{{ loadError() ? 'Não foi possível atualizar' : 'Média semanal' }}</small>
     </vc-card>
   </div>
 </section>

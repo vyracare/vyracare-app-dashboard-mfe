@@ -1,7 +1,7 @@
 <section class="panel finance">
   <div class="panel-header">
     <div>
-      <vc-heading [level]="2">Saude financeira</vc-heading>
+      <vc-heading [level]="2">Saúde financeira</vc-heading>
       <vc-text [muted]="true">Indicadores principais para manter o caixa sob controle.</vc-text>
     </div>
     <vc-button type="button" variant="ghost" size="sm" (click)="navigateTo('/financeiro')">Ver resumo</vc-button>
@@ -10,30 +10,30 @@
   <div class="finance-grid">
     <vc-card class="finance-card positive" title="Receita prevista">
       <div class="finance-top">
-        <span class="badge">+12%</span>
+        <span class="badge">{{ formatVariation(summary()?.confirmedRevenue?.changePercentage ?? 0) }}</span>
       </div>
-      <strong>R$ 124,8k</strong>
-      <p>Entradas confirmadas do mes</p>
+      <strong>{{ loading() ? '—' : formatCurrency(summary()?.confirmedRevenue?.amount ?? 0) }}</strong>
+      <p>Entradas confirmadas do mês</p>
       <vc-button type="button" variant="ghost" size="sm" (click)="navigateTo('/financeiro/receitas')">
         Gerenciar receitas
       </vc-button>
     </vc-card>
     <vc-card class="finance-card warning" title="Despesas operacionais">
       <div class="finance-top">
-        <span class="badge">-6%</span>
+        <span class="badge">{{ formatVariation(summary()?.operatingExpenses?.changePercentage ?? 0) }}</span>
       </div>
-      <strong>R$ 41,2k</strong>
-      <p>Custos fixos e variaveis do mes</p>
+      <strong>{{ loading() ? '—' : formatCurrency(summary()?.operatingExpenses?.amount ?? 0) }}</strong>
+      <p>Custos fixos e variáveis do mês</p>
       <vc-button type="button" variant="ghost" size="sm" (click)="navigateTo('/financeiro/despesas')">
         Controlar despesas
       </vc-button>
     </vc-card>
     <vc-card class="finance-card neutral" title="Boletos pendentes">
       <div class="finance-top">
-        <span class="badge">8</span>
+        <span class="badge">{{ summary()?.pendingInvoices?.count ?? 0 }}</span>
       </div>
-      <strong>R$ 9,6k</strong>
-      <p>Pagamentos aguardando confirmacao</p>
+      <strong>{{ loading() ? '—' : formatCurrency(summary()?.pendingInvoices?.amount ?? 0) }}</strong>
+      <p>{{ loadError() ? 'Não foi possível atualizar' : 'Pagamentos aguardando confirmação' }}</p>
       <vc-button type="button" variant="ghost" size="sm" (click)="navigateTo('/financeiro/boletos')">
         Conferir boletos
       </vc-button>

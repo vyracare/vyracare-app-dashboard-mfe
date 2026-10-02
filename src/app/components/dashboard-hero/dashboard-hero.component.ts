@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   VcButtonComponent,
@@ -6,6 +6,8 @@ import {
   VcHeadingComponent,
   VcTextComponent
 } from '@vyracare/design-system';
+import { DashboardSummary } from '../../models/dashboard-summary.model';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'vyracare-dashboard-hero',
@@ -15,8 +17,28 @@ import {
   styleUrl: './dashboard-hero.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardHeroComponent {
-  constructor(private readonly router: Router) {}
+export class DashboardHeroComponent implements OnInit {
+  readonly summary = signal<DashboardSummary | null>(null);
+  readonly loading = signal(true);
+  readonly loadError = signal(false);
+
+  constructor(
+    private readonly router: Router,
+    private readonly dashboardService: DashboardService
+  ) {}
+
+  ngOnInit(): void {
+    this.dashboardService.getSummary().subscribe({
+      next: summary => {
+        this.summary.set(summary);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loadError.set(true);
+        this.loading.set(false);
+      }
+    });
+  }
 
   navigateTo(path: string): void {
     void this.router.navigate([path]);

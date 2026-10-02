@@ -38,6 +38,8 @@ describe('DashboardHeroComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const actions = compiled.querySelectorAll('.hero-actions vc-button');
     expect(actions.length).toBe(2);
+    expect(actions[0].textContent).toContain('Novo atendimento');
+    expect(actions[1].textContent).toContain('Novo paciente');
   });
 
   it('should render metrics returned by the API', () => {

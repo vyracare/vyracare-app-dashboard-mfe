@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { App } from './app';
 import { DashboardService } from './services/dashboard.service';
 import { of } from 'rxjs';
+import { AppointmentNotificationService } from './services/appointment-notification.service';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -30,7 +31,8 @@ describe('App', () => {
               pendingInvoices: { count: 0, amount: 0 }
             })
           }
-        }
+        },
+        { provide: AppointmentNotificationService, useValue: { start: jest.fn() } }
       ]
     }).compileComponents();
   });
@@ -39,6 +41,13 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
+  });
+
+  it('should start appointment notifications', () => {
+    const fixture = TestBed.createComponent(App);
+    const notifications = TestBed.inject(AppointmentNotificationService);
+    fixture.detectChanges();
+    expect(notifications.start).toHaveBeenCalled();
   });
 
   it('should render title', () => {

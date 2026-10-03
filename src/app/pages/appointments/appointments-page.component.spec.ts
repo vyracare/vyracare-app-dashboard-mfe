@@ -42,7 +42,7 @@ describe('AppointmentsPageComponent', () => {
     expect(dashboardService.listAppointments).toHaveBeenCalled();
     expect(notificationService.start).toHaveBeenCalled();
     expect(fixture.nativeElement.textContent).toContain('Nenhum atendimento agendado');
-    expect(fixture.nativeElement.querySelector('.page-header .header-tag')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.page-header .header-tag')).toBeNull();
     expect(fixture.nativeElement.querySelector('.table-toolbar')).not.toBeNull();
   });
 
@@ -162,4 +162,34 @@ describe('AppointmentsPageComponent', () => {
     expect(component.errorMessage()).toContain('Selecione');
     expect(dashboardService.createAppointment).not.toHaveBeenCalled();
   });
+
+  it('should expose design-system options and select them by id', () => {
+    const component = TestBed.createComponent(AppointmentsPageComponent).componentInstance;
+    component.employeeResults.set([employee, { ...employee, id: 'employee-2', phone: '' }]);
+    component.proceedingResults.set([proceeding]);
+    expect(component.employeeOptions()[0].description).toContain('1199');
+    expect(component.employeeOptions()[1].description).toBe('ana@teste.com');
+    expect(component.proceedingOptions()[0].description).toContain('CON-01');
+    component.selectEmployeeOption(component.employeeOptions()[0]);
+    component.selectProceedingOption(component.proceedingOptions()[0]);
+    expect(component.selectedEmployee()?.id).toBe('employee-1');
+    expect(component.selectedProceeding()?.id).toBe('proceeding-1');
+    component.selectEmployeeOption({ value: 'missing', label: 'Missing' });
+    component.selectProceedingOption({ value: 'missing', label: 'Missing' });
+  });
+
+  it('should handle short searches and lookup errors', fakeAsync(() => {
+    dashboardService.searchEmployees.mockReturnValue(throwError(() => new Error('offline')));
+    dashboardService.searchProceedings.mockReturnValue(throwError(() => new Error('offline')));
+    const component = TestBed.createComponent(AppointmentsPageComponent).componentInstance;
+    component.searchEmployee('a');
+    component.searchProceeding('c');
+    expect(component.employeeResults()).toEqual([]);
+    expect(component.proceedingResults()).toEqual([]);
+    component.searchEmployee('Ana');
+    component.searchProceeding('CON');
+    tick(250);
+    expect(component.employeeLookupError()).toContain('funcionarios');
+    expect(component.proceedingLookupError()).toContain('procedimentos');
+  }));
 });

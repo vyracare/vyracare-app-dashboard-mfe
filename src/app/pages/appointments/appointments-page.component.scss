@@ -17,8 +17,6 @@
 .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
 .eyebrow { display: inline-flex; margin-bottom: .75rem; padding: .35rem .75rem; border-radius: 999px; background: rgba(255,255,255,.75); color: var(--primary); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
 .page-header { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.5rem 1.75rem; border: 1px solid var(--stroke); border-radius: 20px; background: linear-gradient(135deg,rgba(90,59,231,.12),rgba(255,108,136,.12)); }
-.header-tag { display: flex; flex-direction: column; flex-shrink: 0; gap: .25rem; padding: .9rem 1.1rem; border-radius: 16px; background: #fff; box-shadow: 0 14px 30px rgba(44,56,120,.1); }
-.header-tag span { color: var(--muted); font-size: .75rem; }
 :host ::ng-deep .page-header .vc-heading { margin: 0 0 .35rem; color: var(--ink); font-size: 2rem; line-height: 1.2; }
 :host ::ng-deep .page-header .vc-text { margin: 0; color: var(--muted); }
 .text-button { border: 0; background: transparent; color: var(--primary); cursor: pointer; font: inherit; padding: 0; }
@@ -54,4 +52,4 @@ th { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-s
 .reminder-backdrop { z-index: 1010; }
 .modal-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.4rem 0; }
 .modal-actions { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; }
-@media (max-width: 720px) { .page-header, .form-grid, .modal-fields { grid-template-columns: 1fr; } .page-header, .table-toolbar, .reminder-row, .modal-actions { align-items: stretch; flex-direction: column; } .header-tag { width: 100%; } }
+@media (max-width: 720px) { .page-header, .form-grid, .modal-fields { grid-template-columns: 1fr; } .page-header, .table-toolbar, .reminder-row, .modal-actions { align-items: stretch; flex-direction: column; } }

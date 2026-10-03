@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { VcButtonComponent, VcHeadingComponent, VcTextComponent } from '@vyracare/design-system';
+import { VcAutocompleteComponent, VcButtonComponent, VcHeadingComponent, VcTextComponent } from '@vyracare/design-system';
+import type { VcAutocompleteOption } from '@vyracare/design-system';
 import { Subject, catchError, debounceTime, of, switchMap } from 'rxjs';
 import {
   Appointment,
@@ -19,7 +20,7 @@ import { DashboardService } from '../../services/dashboard.service';
 @Component({
   selector: 'vyracare-appointments-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, VcButtonComponent, VcHeadingComponent, VcTextComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, VcAutocompleteComponent, VcButtonComponent, VcHeadingComponent, VcTextComponent],
   templateUrl: './appointments-page.component.html',
   styleUrl: './appointments-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -42,14 +43,18 @@ export class AppointmentsPageComponent implements OnInit {
   readonly proceedingResults = signal<ProceedingLookup[]>([]);
   readonly selectedEmployee = signal<EmployeeLookup | null>(null);
   readonly selectedProceeding = signal<ProceedingLookup | null>(null);
-  readonly employeeQuery = signal('');
-  readonly proceedingQuery = signal('');
   readonly employeeLoading = signal(false);
   readonly proceedingLoading = signal(false);
-  readonly employeeOpen = signal(false);
-  readonly proceedingOpen = signal(false);
   readonly employeeLookupError = signal('');
   readonly proceedingLookupError = signal('');
+  readonly employeeOptions = computed<VcAutocompleteOption[]>(() => this.employeeResults().map(employee => ({
+    value: employee.id, label: employee.fullName,
+    description: `${employee.email}${employee.phone ? ` · ${employee.phone}` : ''}`
+  })));
+  readonly proceedingOptions = computed<VcAutocompleteOption[]>(() => this.proceedingResults().map(proceeding => ({
+    value: proceeding.id, label: proceeding.name,
+    description: `${proceeding.code} · ${proceeding.durationMinutes} min`
+  })));
 
   readonly form = this.formBuilder.nonNullable.group({
     patientName: ['', Validators.required],
@@ -123,9 +128,7 @@ export class AppointmentsPageComponent implements OnInit {
   }
 
   searchEmployee(value: string): void {
-    this.employeeQuery.set(value);
     this.selectedEmployee.set(null);
-    this.employeeOpen.set(true);
     this.employeeLookupError.set('');
     if (value.trim().length < 2) {
       this.employeeResults.set([]);
@@ -137,9 +140,7 @@ export class AppointmentsPageComponent implements OnInit {
   }
 
   searchProceeding(value: string): void {
-    this.proceedingQuery.set(value);
     this.selectedProceeding.set(null);
-    this.proceedingOpen.set(true);
     this.proceedingLookupError.set('');
     if (value.trim().length < 2) {
       this.proceedingResults.set([]);
@@ -152,21 +153,26 @@ export class AppointmentsPageComponent implements OnInit {
 
   selectEmployee(employee: EmployeeLookup): void {
     this.selectedEmployee.set(employee);
-    this.employeeQuery.set(employee.fullName);
     this.form.controls.employeeName.setValue(employee.fullName);
-    this.employeeOpen.set(false);
   }
 
   selectProceeding(proceeding: ProceedingLookup): void {
     this.selectedProceeding.set(proceeding);
-    this.proceedingQuery.set(proceeding.name);
     this.form.controls.proceedingName.setValue(proceeding.name);
-    this.proceedingOpen.set(false);
+  }
+
+  selectEmployeeOption(option: VcAutocompleteOption): void {
+    const employee = this.employeeResults().find(item => item.id === option.value);
+    if (employee) this.selectEmployee(employee);
+  }
+
+  selectProceedingOption(option: VcAutocompleteOption): void {
+    const proceeding = this.proceedingResults().find(item => item.id === option.value);
+    if (proceeding) this.selectProceeding(proceeding);
   }
 
   closeAutocompletePanels(): void {
-    this.employeeOpen.set(false);
-    this.proceedingOpen.set(false);
+    // Panels are managed by the design-system component.
   }
 
   closeReminderModal(): void {
@@ -238,8 +244,6 @@ export class AppointmentsPageComponent implements OnInit {
         this.form.reset();
         this.selectedEmployee.set(null);
         this.selectedProceeding.set(null);
-        this.employeeQuery.set('');
-        this.proceedingQuery.set('');
         this.reminderValue.set(null);
         this.closeFormModal();
         this.loadAppointments();

@@ -56,8 +56,66 @@
           <div class="form-grid">
             <label>Nome do paciente <input type="text" formControlName="patientName" /></label>
             <label>Telefone <input type="tel" formControlName="phoneNumber" placeholder="(00) 00000-0000" /></label>
-            <label>Funcionario responsavel <input type="text" formControlName="employeeName" /></label>
-            <label>Procedimento <input type="text" formControlName="proceedingName" /></label>
+            <label class="autocomplete-field">
+              Funcionario responsavel
+              <input
+                type="search"
+                formControlName="employeeName"
+                autocomplete="off"
+                placeholder="Pesquise por nome, email ou telefone"
+                aria-autocomplete="list"
+                aria-controls="employee-options"
+                [attr.aria-expanded]="employeeOpen()"
+                (input)="searchEmployee($any($event.target).value)"
+                (focus)="employeeOpen.set(employeeQuery().length >= 2)"
+                (keydown.escape)="employeeOpen.set(false)"
+              />
+              @if (employeeOpen()) {
+                <div id="employee-options" class="autocomplete-panel" role="listbox">
+                  @if (employeeLoading()) { <span class="autocomplete-message">Pesquisando funcionarios...</span> }
+                  @else if (employeeLookupError()) { <span class="autocomplete-message error-text">{{ employeeLookupError() }}</span> }
+                  @else if (employeeResults().length === 0) { <span class="autocomplete-message">Nenhum funcionario encontrado.</span> }
+                  @else {
+                    @for (employee of employeeResults(); track employee.id) {
+                      <button type="button" role="option" (mousedown)="$event.preventDefault()" (click)="selectEmployee(employee)">
+                        <strong>{{ employee.fullName }}</strong>
+                        <small>{{ employee.email }}@if (employee.phone) { · {{ employee.phone }}}</small>
+                      </button>
+                    }
+                  }
+                </div>
+              }
+            </label>
+            <label class="autocomplete-field">
+              Procedimento
+              <input
+                type="search"
+                formControlName="proceedingName"
+                autocomplete="off"
+                placeholder="Pesquise por nome ou codigo"
+                aria-autocomplete="list"
+                aria-controls="proceeding-options"
+                [attr.aria-expanded]="proceedingOpen()"
+                (input)="searchProceeding($any($event.target).value)"
+                (focus)="proceedingOpen.set(proceedingQuery().length >= 2)"
+                (keydown.escape)="proceedingOpen.set(false)"
+              />
+              @if (proceedingOpen()) {
+                <div id="proceeding-options" class="autocomplete-panel" role="listbox">
+                  @if (proceedingLoading()) { <span class="autocomplete-message">Pesquisando procedimentos...</span> }
+                  @else if (proceedingLookupError()) { <span class="autocomplete-message error-text">{{ proceedingLookupError() }}</span> }
+                  @else if (proceedingResults().length === 0) { <span class="autocomplete-message">Nenhum procedimento encontrado.</span> }
+                  @else {
+                    @for (proceeding of proceedingResults(); track proceeding.id) {
+                      <button type="button" role="option" (mousedown)="$event.preventDefault()" (click)="selectProceeding(proceeding)">
+                        <strong>{{ proceeding.name }}</strong>
+                        <small>{{ proceeding.code }} · {{ proceeding.durationMinutes }} min</small>
+                      </button>
+                    }
+                  }
+                </div>
+              }
+            </label>
             <label>Data e hora de inicio <input type="datetime-local" formControlName="startsAt" /></label>
             <label>Data e hora de termino <input type="datetime-local" formControlName="endsAt" /></label>
           </div>

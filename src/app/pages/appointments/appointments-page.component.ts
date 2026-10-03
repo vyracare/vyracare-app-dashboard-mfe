@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { VcButtonComponent, VcHeadingComponent, VcTextComponent } from '@vyracare/design-system';
+import { Subject, catchError, debounceTime, of, switchMap } from 'rxjs';
 import {
   Appointment,
   CreateAppointmentRequest,
+  EmployeeLookup,
+  ProceedingLookup,
   ReminderOffsetUnit,
   ScheduleStatus
 } from '../../models/appointment.model';
@@ -22,6 +26,9 @@ import { DashboardService } from '../../services/dashboard.service';
 })
 export class AppointmentsPageComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly employeeSearch = new Subject<string>();
+  private readonly proceedingSearch = new Subject<string>();
   readonly appointments = signal<Appointment[]>([]);
   readonly loading = signal(true);
   readonly saving = signal(false);
@@ -31,6 +38,18 @@ export class AppointmentsPageComponent implements OnInit {
   readonly formModalOpen = signal(false);
   readonly reminderValue = signal<number | null>(null);
   readonly reminderUnit = signal<ReminderOffsetUnit>('Hours');
+  readonly employeeResults = signal<EmployeeLookup[]>([]);
+  readonly proceedingResults = signal<ProceedingLookup[]>([]);
+  readonly selectedEmployee = signal<EmployeeLookup | null>(null);
+  readonly selectedProceeding = signal<ProceedingLookup | null>(null);
+  readonly employeeQuery = signal('');
+  readonly proceedingQuery = signal('');
+  readonly employeeLoading = signal(false);
+  readonly proceedingLoading = signal(false);
+  readonly employeeOpen = signal(false);
+  readonly proceedingOpen = signal(false);
+  readonly employeeLookupError = signal('');
+  readonly proceedingLookupError = signal('');
 
   readonly form = this.formBuilder.nonNullable.group({
     patientName: ['', Validators.required],
@@ -44,7 +63,43 @@ export class AppointmentsPageComponent implements OnInit {
   constructor(
     private readonly dashboardService: DashboardService,
     private readonly notificationService: AppointmentNotificationService
-  ) {}
+  ) {
+    this.employeeSearch.pipe(
+      debounceTime(250),
+      switchMap(search => {
+        this.employeeLoading.set(true);
+        this.employeeLookupError.set('');
+        return this.dashboardService.searchEmployees(search).pipe(
+          catchError(() => {
+            this.employeeLookupError.set('Nao foi possivel pesquisar os funcionarios.');
+            return of([]);
+          })
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(employees => {
+      this.employeeResults.set(employees);
+      this.employeeLoading.set(false);
+    });
+
+    this.proceedingSearch.pipe(
+      debounceTime(250),
+      switchMap(search => {
+        this.proceedingLoading.set(true);
+        this.proceedingLookupError.set('');
+        return this.dashboardService.searchProceedings(search).pipe(
+          catchError(() => {
+            this.proceedingLookupError.set('Nao foi possivel pesquisar os procedimentos.');
+            return of([]);
+          })
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(proceedings => {
+      this.proceedingResults.set(proceedings);
+      this.proceedingLoading.set(false);
+    });
+  }
 
   ngOnInit(): void {
     this.notificationService.start();
@@ -64,6 +119,54 @@ export class AppointmentsPageComponent implements OnInit {
   closeFormModal(): void {
     this.formModalOpen.set(false);
     this.reminderModalOpen.set(false);
+    this.closeAutocompletePanels();
+  }
+
+  searchEmployee(value: string): void {
+    this.employeeQuery.set(value);
+    this.selectedEmployee.set(null);
+    this.employeeOpen.set(true);
+    this.employeeLookupError.set('');
+    if (value.trim().length < 2) {
+      this.employeeResults.set([]);
+      this.employeeLoading.set(false);
+      return;
+    }
+    this.employeeLoading.set(true);
+    this.employeeSearch.next(value.trim());
+  }
+
+  searchProceeding(value: string): void {
+    this.proceedingQuery.set(value);
+    this.selectedProceeding.set(null);
+    this.proceedingOpen.set(true);
+    this.proceedingLookupError.set('');
+    if (value.trim().length < 2) {
+      this.proceedingResults.set([]);
+      this.proceedingLoading.set(false);
+      return;
+    }
+    this.proceedingLoading.set(true);
+    this.proceedingSearch.next(value.trim());
+  }
+
+  selectEmployee(employee: EmployeeLookup): void {
+    this.selectedEmployee.set(employee);
+    this.employeeQuery.set(employee.fullName);
+    this.form.controls.employeeName.setValue(employee.fullName);
+    this.employeeOpen.set(false);
+  }
+
+  selectProceeding(proceeding: ProceedingLookup): void {
+    this.selectedProceeding.set(proceeding);
+    this.proceedingQuery.set(proceeding.name);
+    this.form.controls.proceedingName.setValue(proceeding.name);
+    this.proceedingOpen.set(false);
+  }
+
+  closeAutocompletePanels(): void {
+    this.employeeOpen.set(false);
+    this.proceedingOpen.set(false);
   }
 
   closeReminderModal(): void {
@@ -97,6 +200,13 @@ export class AppointmentsPageComponent implements OnInit {
       return;
     }
 
+    const employee = this.selectedEmployee();
+    const proceeding = this.selectedProceeding();
+    if (!employee || !proceeding) {
+      this.errorMessage.set('Selecione um funcionario e um procedimento nas opcoes da pesquisa.');
+      return;
+    }
+
     const value = this.form.getRawValue();
     const startsAt = new Date(value.startsAt);
     const endsAt = new Date(value.endsAt);
@@ -109,10 +219,10 @@ export class AppointmentsPageComponent implements OnInit {
       patientId: value.patientName,
       patientName: value.patientName,
       phoneNumber: value.phoneNumber,
-      employeeId: value.employeeName,
-      employeeName: value.employeeName,
-      proceedingId: value.proceedingName,
-      proceedingName: value.proceedingName,
+      employeeId: employee.id,
+      employeeName: employee.fullName,
+      proceedingId: proceeding.id,
+      proceedingName: proceeding.name,
       startsAt: startsAt.toISOString(),
       endsAt: endsAt.toISOString(),
       status: 'Scheduled',
@@ -126,6 +236,10 @@ export class AppointmentsPageComponent implements OnInit {
         this.saving.set(false);
         this.successMessage.set('Atendimento agendado com sucesso.');
         this.form.reset();
+        this.selectedEmployee.set(null);
+        this.selectedProceeding.set(null);
+        this.employeeQuery.set('');
+        this.proceedingQuery.set('');
         this.reminderValue.set(null);
         this.closeFormModal();
         this.loadAppointments();

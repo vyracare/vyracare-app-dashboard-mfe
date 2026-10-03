@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environments';
@@ -7,7 +7,9 @@ import { FinanceSummary } from '../models/finance-summary.model';
 import {
   Appointment,
   AppointmentNotification,
-  CreateAppointmentRequest
+  CreateAppointmentRequest,
+  EmployeeLookup,
+  ProceedingLookup
 } from '../models/appointment.model';
 
 @Injectable({ providedIn: 'root' })
@@ -28,6 +30,19 @@ export class DashboardService {
 
   createAppointment(request: CreateAppointmentRequest): Observable<Appointment> {
     return this.http.post<Appointment>(environment.appointmentsApiUrl, request);
+  }
+
+  searchEmployees(search: string): Observable<EmployeeLookup[]> {
+    const params = new HttpParams().set('search', search.trim()).set('limit', 20);
+    return this.http.get<EmployeeLookup[]>(`${environment.authenticationApiUrl}/employees`, { params });
+  }
+
+  searchProceedings(search: string): Observable<ProceedingLookup[]> {
+    const params = new HttpParams()
+      .set('search', search.trim())
+      .set('activeOnly', true)
+      .set('limit', 20);
+    return this.http.get<ProceedingLookup[]>(environment.proceedingsApiUrl, { params });
   }
 
   getDueNotifications(): Observable<AppointmentNotification[]> {

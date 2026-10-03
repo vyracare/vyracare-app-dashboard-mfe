@@ -2,6 +2,21 @@ export type AppointmentStatus = 'Scheduled' | 'Confirmed' | 'Completed' | 'Cance
 export type ScheduleStatus = 'Scheduled' | 'Approaching' | 'Today' | 'Overdue' | 'Completed' | 'Cancelled' | 'NoShow';
 export type ReminderOffsetUnit = 'Hours' | 'Days';
 
+export interface EmployeeLookup {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string | null;
+  role: string | null;
+}
+
+export interface ProceedingLookup {
+  id: string;
+  name: string;
+  code: string;
+  durationMinutes: number;
+}
+
 export interface Appointment {
   id: string;
   patientId: string;

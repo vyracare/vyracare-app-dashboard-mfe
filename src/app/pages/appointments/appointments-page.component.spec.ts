@@ -1,5 +1,5 @@
 import { provideZonelessChangeDetection } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AppointmentsPageComponent } from './appointments-page.component';
@@ -9,8 +9,12 @@ import { AppointmentNotificationService } from '../../services/appointment-notif
 describe('AppointmentsPageComponent', () => {
   const dashboardService = {
     listAppointments: jest.fn(),
-    createAppointment: jest.fn()
+    createAppointment: jest.fn(),
+    searchEmployees: jest.fn(),
+    searchProceedings: jest.fn()
   };
+  const employee = { id: 'employee-1', fullName: 'Ana Silva', email: 'ana@teste.com', phone: '1199', role: 'Esteticista' };
+  const proceeding = { id: 'proceeding-1', name: 'Consulta', code: 'CON-01', durationMinutes: 60 };
   const notificationService = {
     start: jest.fn(),
     requestPermission: jest.fn().mockResolvedValue(true)
@@ -19,6 +23,8 @@ describe('AppointmentsPageComponent', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     dashboardService.listAppointments.mockReturnValue(of([]));
+    dashboardService.searchEmployees.mockReturnValue(of([employee]));
+    dashboardService.searchProceedings.mockReturnValue(of([proceeding]));
     await TestBed.configureTestingModule({
       imports: [AppointmentsPageComponent],
       providers: [
@@ -77,8 +83,12 @@ describe('AppointmentsPageComponent', () => {
       patientName: 'Maria', phoneNumber: '11999999999', employeeName: 'Ana',
       proceedingName: 'Consulta', startsAt: '2026-10-05T10:00', endsAt: '2026-10-05T11:00'
     });
+    component.selectEmployee(employee);
+    component.selectProceeding(proceeding);
     component.submit();
-    expect(dashboardService.createAppointment).toHaveBeenCalledWith(expect.objectContaining({ patientName: 'Maria' }));
+    expect(dashboardService.createAppointment).toHaveBeenCalledWith(expect.objectContaining({
+      patientName: 'Maria', employeeId: 'employee-1', proceedingId: 'proceeding-1'
+    }));
     expect(component.successMessage()).toContain('sucesso');
   });
 
@@ -90,6 +100,8 @@ describe('AppointmentsPageComponent', () => {
       patientName: 'Maria', phoneNumber: '11999999999', employeeName: 'Ana',
       proceedingName: 'Consulta', startsAt: '2026-10-05T11:00', endsAt: '2026-10-05T10:00'
     });
+    component.selectEmployee(employee);
+    component.selectProceeding(proceeding);
     component.submit();
     expect(component.errorMessage()).toContain('posterior');
 
@@ -118,5 +130,36 @@ describe('AppointmentsPageComponent', () => {
     expect(component.formModalOpen()).toBe(true);
     component.closeFormModal();
     expect(component.formModalOpen()).toBe(false);
+  });
+
+  it('should search and select employees and proceedings', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AppointmentsPageComponent);
+    fixture.detectChanges();
+    const component = fixture.componentInstance;
+
+    component.searchEmployee('Ana');
+    component.searchProceeding('CON');
+    tick(250);
+
+    expect(dashboardService.searchEmployees).toHaveBeenCalledWith('Ana');
+    expect(dashboardService.searchProceedings).toHaveBeenCalledWith('CON');
+    expect(component.employeeResults()).toEqual([employee]);
+    expect(component.proceedingResults()).toEqual([proceeding]);
+
+    component.selectEmployee(employee);
+    component.selectProceeding(proceeding);
+    expect(component.form.controls.employeeName.value).toBe('Ana Silva');
+    expect(component.form.controls.proceedingName.value).toBe('Consulta');
+  }));
+
+  it('should require selecting autocomplete options', () => {
+    const component = TestBed.createComponent(AppointmentsPageComponent).componentInstance;
+    component.form.setValue({
+      patientName: 'Maria', phoneNumber: '11999999999', employeeName: 'Texto livre',
+      proceedingName: 'Texto livre', startsAt: '2026-10-05T10:00', endsAt: '2026-10-05T11:00'
+    });
+    component.submit();
+    expect(component.errorMessage()).toContain('Selecione');
+    expect(dashboardService.createAppointment).not.toHaveBeenCalled();
   });
 });

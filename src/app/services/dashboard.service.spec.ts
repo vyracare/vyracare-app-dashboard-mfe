@@ -50,6 +50,25 @@ describe('DashboardService', () => {
     request.flush({});
   });
 
+  it('should search employees and proceedings for autocomplete', () => {
+    service.searchEmployees(' ana ').subscribe();
+    const employeeRequest = http.expectOne(request =>
+      request.url === `${environment.authenticationApiUrl}/employees`
+      && request.params.get('search') === 'ana'
+      && request.params.get('limit') === '20');
+    expect(employeeRequest.request.method).toBe('GET');
+    employeeRequest.flush([]);
+
+    service.searchProceedings(' bot ').subscribe();
+    const proceedingRequest = http.expectOne(request =>
+      request.url === environment.proceedingsApiUrl
+      && request.params.get('search') === 'bot'
+      && request.params.get('activeOnly') === 'true'
+      && request.params.get('limit') === '20');
+    expect(proceedingRequest.request.method).toBe('GET');
+    proceedingRequest.flush([]);
+  });
+
   it('should request and acknowledge due notifications', () => {
     service.getDueNotifications().subscribe();
     http.expectOne(`${environment.appointmentsApiUrl}/notifications/due`).flush([]);

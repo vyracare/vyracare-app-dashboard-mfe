@@ -49,6 +49,7 @@ th { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-s
 .modal { width: min(500px,100%); max-height: 90vh; overflow: auto; padding: 1.5rem; border-radius: 20px; background: #fff; box-shadow: 0 30px 80px rgba(15,18,48,.3); }
 .appointment-modal { width: min(780px,100%); }
 .appointment-modal form { margin-top: 1.25rem; }
+.appointment-modal form > .modal-actions { margin-top: 1.25rem; }
 .reminder-backdrop { z-index: 1010; }
 .modal-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.4rem 0; }
 .modal-actions { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; }

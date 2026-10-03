@@ -6,19 +6,23 @@
   --ink: #333b60;
   --muted: #6f7494;
   --stroke: rgba(90, 59, 231, 0.14);
-  font-family: "Manrope", sans-serif;
   color: var(--ink);
-  min-height: 100vh;
-  padding: 2.5rem 3rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
 }
 
-.breadcrumb { display: flex; gap: .55rem; margin-bottom: 1rem; color: var(--muted); font-size: .9rem; }
-.breadcrumb a { color: var(--primary); text-decoration: none; }
-.eyebrow { color: var(--primary); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-.page-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
-.page-header h1 { margin: .4rem 0; }
+.breadcrumb { display: flex; align-items: center; gap: .55rem; color: var(--muted); font-size: .9rem; }
+.breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+.eyebrow { display: inline-flex; margin-bottom: .75rem; padding: .35rem .75rem; border-radius: 999px; background: rgba(255,255,255,.75); color: var(--primary); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.page-header { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.5rem 1.75rem; border: 1px solid var(--stroke); border-radius: 20px; background: linear-gradient(135deg,rgba(90,59,231,.12),rgba(255,108,136,.12)); }
+.header-tag { display: flex; flex-direction: column; flex-shrink: 0; gap: .25rem; padding: .9rem 1.1rem; border-radius: 16px; background: #fff; box-shadow: 0 14px 30px rgba(44,56,120,.1); }
+.header-tag span { color: var(--muted); font-size: .75rem; }
+:host ::ng-deep .page-header .vc-heading { margin: 0 0 .35rem; color: var(--ink); font-size: 2rem; line-height: 1.2; }
+:host ::ng-deep .page-header .vc-text { margin: 0; color: var(--muted); }
 .text-button { border: 0; background: transparent; color: var(--primary); cursor: pointer; font: inherit; padding: 0; }
-.form-card, .table-card { background: rgba(255,255,255,.94); border: 1px solid var(--stroke); border-radius: 20px; box-shadow: 0 20px 45px rgba(44,56,120,.12); padding: 1.6rem; margin-bottom: 2rem; }
+.table-card { background: rgba(255,255,255,.94); border: 1px solid var(--stroke); border-radius: 20px; box-shadow: 0 20px 45px rgba(44,56,120,.12); padding: 1.6rem; }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
 label { display: grid; gap: .45rem; color: var(--ink); font-size: .9rem; font-weight: 600; }
 input, select { border: 1px solid rgba(90,59,231,.2); border-radius: 12px; padding: .8rem .9rem; font: inherit; color: var(--ink); background: #fff; }
@@ -26,11 +30,13 @@ input:focus, select:focus { outline: 2px solid rgba(90,59,231,.18); border-color
 .reminder-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.25rem; padding: 1rem; border-radius: 14px; background: #f6f4ff; }
 .reminder-row div { display: grid; gap: .2rem; }
 .reminder-row span { color: var(--muted); font-size: .88rem; }
-.form-actions { display: flex; justify-content: flex-end; margin-top: 1.25rem; }
 .message { border-radius: 10px; padding: .75rem 1rem; margin: 1rem 0 0; }
 .message.error { background: #fff0f2; color: #a12740; }
 .message.success { background: #ecfff5; color: #14724a; }
-.section-heading { margin-bottom: 1.25rem; }
+.table-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+.section-heading { margin: 0; }
+:host ::ng-deep .section-heading .vc-heading { margin: 0 0 .25rem; }
+:host ::ng-deep .section-heading .vc-text { margin: 0; }
 .table-wrapper { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; min-width: 820px; }
 th, td { text-align: left; padding: .9rem .7rem; border-bottom: 1px solid #ececf5; }
@@ -48,4 +54,4 @@ th { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-s
 .reminder-backdrop { z-index: 1010; }
 .modal-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.4rem 0; }
 .modal-actions { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; }
-@media (max-width: 720px) { .appointments-page { padding: 1.5rem; } .page-header, .form-grid, .modal-fields { grid-template-columns: 1fr; } .page-header, .reminder-row, .modal-actions { align-items: stretch; flex-direction: column; } }
+@media (max-width: 720px) { .page-header, .form-grid, .modal-fields { grid-template-columns: 1fr; } .page-header, .table-toolbar, .reminder-row, .modal-actions { align-items: stretch; flex-direction: column; } .header-tag { width: 100%; } }

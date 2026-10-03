@@ -6,16 +6,22 @@
       <vc-heading [level]="1">Atendimentos</vc-heading>
       <vc-text [muted]="true">Acompanhe a agenda, os profissionais e a proximidade de cada atendimento.</vc-text>
     </div>
-    <vc-button type="button" (click)="openFormModal()">Cadastrar atendimento</vc-button>
+    <div class="header-tag">
+      <span>Agenda organizada</span>
+      <strong>Acompanhamento em tempo real</strong>
+    </div>
   </header>
 
   @if (errorMessage()) { <p class="message error" role="alert">{{ errorMessage() }}</p> }
   @if (successMessage()) { <p class="message success" role="status">{{ successMessage() }}</p> }
 
   <section class="table-card">
-    <div class="section-heading">
-      <vc-heading [level]="2">Todos os agendamentos</vc-heading>
-      <vc-text [muted]="true">Acompanhe quando cada atendimento esta se aproximando.</vc-text>
+    <div class="table-toolbar">
+      <div class="section-heading">
+        <vc-heading [level]="2">Todos os agendamentos</vc-heading>
+        <vc-text [muted]="true">Acompanhe quando cada atendimento esta se aproximando.</vc-text>
+      </div>
+      <vc-button type="button" (click)="openFormModal()">Cadastrar atendimento</vc-button>
     </div>
     <div class="table-wrapper">
       <table>

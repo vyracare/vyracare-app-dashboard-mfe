@@ -36,6 +36,8 @@ describe('AppointmentsPageComponent', () => {
     expect(dashboardService.listAppointments).toHaveBeenCalled();
     expect(notificationService.start).toHaveBeenCalled();
     expect(fixture.nativeElement.textContent).toContain('Nenhum atendimento agendado');
+    expect(fixture.nativeElement.querySelector('.page-header .header-tag')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.table-toolbar')).not.toBeNull();
   });
 
   it('should validate required fields', () => {

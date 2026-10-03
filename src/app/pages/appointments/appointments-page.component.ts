@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { VcButtonComponent, VcHeadingComponent, VcTextComponent } from '@vyracare/design-system';
 import {
   Appointment,
@@ -15,7 +15,7 @@ import { DashboardService } from '../../services/dashboard.service';
 @Component({
   selector: 'vyracare-appointments-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, VcButtonComponent, VcHeadingComponent, VcTextComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, VcButtonComponent, VcHeadingComponent, VcTextComponent],
   templateUrl: './appointments-page.component.html',
   styleUrl: './appointments-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,6 +28,7 @@ export class AppointmentsPageComponent implements OnInit {
   readonly errorMessage = signal('');
   readonly successMessage = signal('');
   readonly reminderModalOpen = signal(false);
+  readonly formModalOpen = signal(false);
   readonly reminderValue = signal<number | null>(null);
   readonly reminderUnit = signal<ReminderOffsetUnit>('Hours');
 
@@ -42,8 +43,7 @@ export class AppointmentsPageComponent implements OnInit {
 
   constructor(
     private readonly dashboardService: DashboardService,
-    private readonly notificationService: AppointmentNotificationService,
-    private readonly router: Router
+    private readonly notificationService: AppointmentNotificationService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +53,17 @@ export class AppointmentsPageComponent implements OnInit {
 
   openReminderModal(): void {
     this.reminderModalOpen.set(true);
+  }
+
+  openFormModal(): void {
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    this.formModalOpen.set(true);
+  }
+
+  closeFormModal(): void {
+    this.formModalOpen.set(false);
+    this.reminderModalOpen.set(false);
   }
 
   closeReminderModal(): void {
@@ -116,6 +127,7 @@ export class AppointmentsPageComponent implements OnInit {
         this.successMessage.set('Atendimento agendado com sucesso.');
         this.form.reset();
         this.reminderValue.set(null);
+        this.closeFormModal();
         this.loadAppointments();
       },
       error: error => {
@@ -123,10 +135,6 @@ export class AppointmentsPageComponent implements OnInit {
         this.errorMessage.set(error?.error?.message ?? 'Não foi possível salvar o atendimento.');
       }
     });
-  }
-
-  goBack(): void {
-    void this.router.navigate(['/dashboard']);
   }
 
   statusLabel(status: ScheduleStatus): string {

@@ -1,6 +1,6 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AppointmentsPageComponent } from './appointments-page.component';
 import { DashboardService } from '../../services/dashboard.service';
@@ -36,6 +36,8 @@ describe('AppointmentsPageComponent', () => {
     expect(dashboardService.listAppointments).toHaveBeenCalled();
     expect(notificationService.start).toHaveBeenCalled();
     expect(fixture.nativeElement.textContent).toContain('Nenhum atendimento agendado');
+    expect(fixture.nativeElement.querySelector('.page-header .header-tag')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.table-toolbar')).not.toBeNull();
   });
 
   it('should validate required fields', () => {
@@ -109,12 +111,12 @@ describe('AppointmentsPageComponent', () => {
     expect(fixture.componentInstance.loading()).toBe(false);
   });
 
-  it('should expose status labels and navigate back', () => {
+  it('should expose status labels and control the appointment modal', () => {
     const component = TestBed.createComponent(AppointmentsPageComponent).componentInstance;
-    const router = TestBed.inject(Router);
-    const navigate = jest.spyOn(router, 'navigate').mockResolvedValue(true);
     expect(component.statusLabel('Approaching')).toBe('Próximo');
-    component.goBack();
-    expect(navigate).toHaveBeenCalledWith(['/dashboard']);
+    component.openFormModal();
+    expect(component.formModalOpen()).toBe(true);
+    component.closeFormModal();
+    expect(component.formModalOpen()).toBe(false);
   });
 });

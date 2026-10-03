@@ -12,9 +12,12 @@
   padding: 2.5rem 3rem 3rem;
 }
 
-.page-header { margin-bottom: 1.5rem; }
+.breadcrumb { display: flex; gap: .55rem; margin-bottom: 1rem; color: var(--muted); font-size: .9rem; }
+.breadcrumb a { color: var(--primary); text-decoration: none; }
+.eyebrow { color: var(--primary); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.page-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
 .page-header h1 { margin: .4rem 0; }
-.back-button, .text-button { border: 0; background: transparent; color: var(--primary); cursor: pointer; font: inherit; padding: 0; }
+.text-button { border: 0; background: transparent; color: var(--primary); cursor: pointer; font: inherit; padding: 0; }
 .form-card, .table-card { background: rgba(255,255,255,.94); border: 1px solid var(--stroke); border-radius: 20px; box-shadow: 0 20px 45px rgba(44,56,120,.12); padding: 1.6rem; margin-bottom: 2rem; }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
 label { display: grid; gap: .45rem; color: var(--ink); font-size: .9rem; font-weight: 600; }
@@ -39,7 +42,10 @@ th { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-s
 .status[data-status="Completed"] { background: #e5faef; color: #14724a; }
 .status[data-status="Cancelled"] { background: #ededf2; color: #67677a; }
 .modal-backdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 1rem; background: rgba(23,25,48,.52); }
-.modal { width: min(500px,100%); padding: 1.5rem; border-radius: 20px; background: #fff; box-shadow: 0 30px 80px rgba(15,18,48,.3); }
+.modal { width: min(500px,100%); max-height: 90vh; overflow: auto; padding: 1.5rem; border-radius: 20px; background: #fff; box-shadow: 0 30px 80px rgba(15,18,48,.3); }
+.appointment-modal { width: min(780px,100%); }
+.appointment-modal form { margin-top: 1.25rem; }
+.reminder-backdrop { z-index: 1010; }
 .modal-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.4rem 0; }
 .modal-actions { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; }
-@media (max-width: 720px) { .appointments-page { padding: 1.5rem; } .form-grid, .modal-fields { grid-template-columns: 1fr; } .reminder-row, .modal-actions { align-items: stretch; flex-direction: column; } }
+@media (max-width: 720px) { .appointments-page { padding: 1.5rem; } .page-header, .form-grid, .modal-fields { grid-template-columns: 1fr; } .page-header, .reminder-row, .modal-actions { align-items: stretch; flex-direction: column; } }

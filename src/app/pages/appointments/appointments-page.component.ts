@@ -42,6 +42,7 @@ import { DashboardService } from '../../services/dashboard.service';
   styleUrl: './appointments-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+/** Coordena a agenda, o cadastro modal e as pesquisas de funcionarios e procedimentos. */
 export class AppointmentsPageComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
@@ -123,27 +124,32 @@ export class AppointmentsPageComponent implements OnInit {
     });
   }
 
+  /** Inicia o mecanismo de notificacoes e carrega os atendimentos existentes. */
   ngOnInit(): void {
     this.notificationService.start();
     this.loadAppointments();
   }
 
+  /** Abre a configuracao de antecedencia da notificacao. */
   openReminderModal(): void {
     this.reminderModalOpen.set(true);
   }
 
+  /** Abre o cadastro de atendimento e limpa mensagens anteriores. */
   openFormModal(): void {
     this.errorMessage.set('');
     this.successMessage.set('');
     this.formModalOpen.set(true);
   }
 
+  /** Fecha o cadastro, o lembrete e os paineis auxiliares. */
   closeFormModal(): void {
     this.formModalOpen.set(false);
     this.reminderModalOpen.set(false);
     this.closeAutocompletePanels();
   }
 
+  /** Agenda a pesquisa de funcionarios quando existem ao menos dois caracteres. */
   searchEmployee(value: string): void {
     this.selectedEmployee.set(null);
     this.employeeLookupError.set('');
@@ -156,6 +162,7 @@ export class AppointmentsPageComponent implements OnInit {
     this.employeeSearch.next(value.trim());
   }
 
+  /** Agenda a pesquisa de procedimentos quando existem ao menos dois caracteres. */
   searchProceeding(value: string): void {
     this.selectedProceeding.set(null);
     this.proceedingLookupError.set('');
@@ -168,34 +175,41 @@ export class AppointmentsPageComponent implements OnInit {
     this.proceedingSearch.next(value.trim());
   }
 
+  /** Registra o funcionario escolhido e sincroniza seu nome no formulario. */
   selectEmployee(employee: EmployeeLookup): void {
     this.selectedEmployee.set(employee);
     this.form.controls.employeeName.setValue(employee.fullName);
   }
 
+  /** Registra o procedimento escolhido e sincroniza seu nome no formulario. */
   selectProceeding(proceeding: ProceedingLookup): void {
     this.selectedProceeding.set(proceeding);
     this.form.controls.proceedingName.setValue(proceeding.name);
   }
 
+  /** Resolve uma opcao do autocomplete para o funcionario completo. */
   selectEmployeeOption(option: VcAutocompleteOption): void {
     const employee = this.employeeResults().find(item => item.id === option.value);
     if (employee) this.selectEmployee(employee);
   }
 
+  /** Resolve uma opcao do autocomplete para o procedimento completo. */
   selectProceedingOption(option: VcAutocompleteOption): void {
     const proceeding = this.proceedingResults().find(item => item.id === option.value);
     if (proceeding) this.selectProceeding(proceeding);
   }
 
+  /** Mantem um ponto de extensao para fechamento dos paineis controlados pelo Design System. */
   closeAutocompletePanels(): void {
     // Panels are managed by the design-system component.
   }
 
+  /** Fecha a configuracao de notificacao sem alterar o formulario principal. */
   closeReminderModal(): void {
     this.reminderModalOpen.set(false);
   }
 
+  /** Valida e salva a antecedencia escolhida depois de solicitar permissao de notificacao. */
   async saveReminder(value: string, unit: string): Promise<void> {
     const parsedValue = Number(value);
     if (!Number.isInteger(parsedValue) || parsedValue <= 0) {
@@ -209,11 +223,13 @@ export class AppointmentsPageComponent implements OnInit {
     this.closeReminderModal();
   }
 
+  /** Remove a configuracao de lembrete do atendimento em edicao. */
   clearReminder(): void {
     this.reminderValue.set(null);
     this.closeReminderModal();
   }
 
+  /** Valida as selecoes e os horarios antes de criar o atendimento pela API. */
   submit(): void {
     this.errorMessage.set('');
     this.successMessage.set('');
@@ -272,6 +288,7 @@ export class AppointmentsPageComponent implements OnInit {
     });
   }
 
+  /** Traduz o estado calculado da agenda para o rotulo exibido na tabela. */
   statusLabel(status: ScheduleStatus): string {
     const labels: Record<ScheduleStatus, string> = {
       Scheduled: 'Agendado',
@@ -285,6 +302,7 @@ export class AppointmentsPageComponent implements OnInit {
     return labels[status];
   }
 
+  /** Carrega os atendimentos e atualiza os estados de feedback da pagina. */
   private loadAppointments(): void {
     this.loading.set(true);
     this.dashboardService.listAppointments().subscribe({

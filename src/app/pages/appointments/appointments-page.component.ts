@@ -3,7 +3,14 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnIni
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { VcAutocompleteComponent, VcButtonComponent, VcHeadingComponent, VcTextComponent } from '@vyracare/design-system';
+import {
+  VcAutocompleteComponent,
+  VcButtonComponent,
+  VcDateTimeInputComponent,
+  VcHeadingComponent,
+  VcPhoneInputComponent,
+  VcTextComponent
+} from '@vyracare/design-system';
 import type { VcAutocompleteOption } from '@vyracare/design-system';
 import { Subject, catchError, debounceTime, of, switchMap } from 'rxjs';
 import {
@@ -20,7 +27,17 @@ import { DashboardService } from '../../services/dashboard.service';
 @Component({
   selector: 'vyracare-appointments-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, VcAutocompleteComponent, VcButtonComponent, VcHeadingComponent, VcTextComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    VcAutocompleteComponent,
+    VcButtonComponent,
+    VcDateTimeInputComponent,
+    VcHeadingComponent,
+    VcPhoneInputComponent,
+    VcTextComponent
+  ],
   templateUrl: './appointments-page.component.html',
   styleUrl: './appointments-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

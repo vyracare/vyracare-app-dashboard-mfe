@@ -132,6 +132,25 @@ describe('AppointmentsPageComponent', () => {
     expect(component.formModalOpen()).toBe(false);
   });
 
+  it('should use the shared phone mask and date-time inputs in the appointment modal', () => {
+    const fixture = TestBed.createComponent(AppointmentsPageComponent);
+    fixture.detectChanges();
+    fixture.componentInstance.openFormModal();
+    fixture.detectChanges();
+
+    const phoneInput: HTMLInputElement = fixture.nativeElement.querySelector('vc-phone-input input');
+    const dateTimeInputs: HTMLInputElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('vc-date-time-input input')
+    );
+    phoneInput.value = '11987654321';
+    phoneInput.dispatchEvent(new Event('input'));
+
+    expect(phoneInput.value).toBe('(11) 98765-4321');
+    expect(fixture.componentInstance.form.controls.phoneNumber.value).toBe('(11) 98765-4321');
+    expect(dateTimeInputs).toHaveLength(2);
+    expect(dateTimeInputs.every(input => input.type === 'datetime-local')).toBe(true);
+  });
+
   it('should search and select employees and proceedings', fakeAsync(() => {
     const fixture = TestBed.createComponent(AppointmentsPageComponent);
     fixture.detectChanges();

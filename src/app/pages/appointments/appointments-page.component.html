@@ -51,11 +51,11 @@
         <form [formGroup]="form" (ngSubmit)="submit()">
           <div class="form-grid">
             <label>Nome do paciente <input type="text" formControlName="patientName" /></label>
-            <label>Telefone <input type="tel" formControlName="phoneNumber" placeholder="(00) 00000-0000" /></label>
+            <vc-phone-input id="appointment-phone" label="Telefone" formControlName="phoneNumber"></vc-phone-input>
             <vc-autocomplete id="appointment-employee" label="Funcionario responsavel" placeholder="Pesquise por nome, email ou telefone" formControlName="employeeName" [options]="employeeOptions()" [loading]="employeeLoading()" [error]="employeeLookupError()" loadingText="Pesquisando funcionarios..." emptyText="Nenhum funcionario encontrado." (searchChange)="searchEmployee($event)" (selectionChange)="selectEmployeeOption($event)"></vc-autocomplete>
             <vc-autocomplete id="appointment-proceeding" label="Procedimento" placeholder="Pesquise por nome ou codigo" formControlName="proceedingName" [options]="proceedingOptions()" [loading]="proceedingLoading()" [error]="proceedingLookupError()" loadingText="Pesquisando procedimentos..." emptyText="Nenhum procedimento encontrado." (searchChange)="searchProceeding($event)" (selectionChange)="selectProceedingOption($event)"></vc-autocomplete>
-            <label>Data e hora de inicio <input type="datetime-local" formControlName="startsAt" /></label>
-            <label>Data e hora de termino <input type="datetime-local" formControlName="endsAt" /></label>
+            <vc-date-time-input id="appointment-start" label="Data e hora de inicio" formControlName="startsAt"></vc-date-time-input>
+            <vc-date-time-input id="appointment-end" label="Data e hora de termino" formControlName="endsAt"></vc-date-time-input>
           </div>
           <div class="reminder-row">
             <div><strong>Notificacao</strong><span>{{ reminderValue() ? reminderValue() + ' ' + (reminderUnit() === 'Days' ? 'dia(s)' : 'hora(s)') + ' antes' : 'Sem lembrete configurado' }}</span></div>

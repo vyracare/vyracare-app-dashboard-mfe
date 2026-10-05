@@ -7,7 +7,8 @@ const shared = {
   "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: deps["@angular/common"] },
   "@angular/router": { singleton: true, strictVersion: true, requiredVersion: deps["@angular/router"] },
   "@angular/forms": { singleton: true, strictVersion: true, requiredVersion: deps["@angular/forms"] },
-  "rxjs": { singleton: true, strictVersion: true, requiredVersion: deps["rxjs"] }
+  "rxjs": { singleton: true, strictVersion: true, requiredVersion: deps["rxjs"] },
+  "@vyracare/design-system": { singleton: true, strictVersion: false, requiredVersion: false }
 };
 
 module.exports = {

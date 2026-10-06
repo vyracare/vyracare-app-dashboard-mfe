@@ -1,12 +1,12 @@
 :host { display: block; }
-.appointments-page { --primary: #5a3be7; --ink: #333b60; --muted: #6f7494; --stroke: rgba(90,59,231,.14); color: var(--ink); display: flex; flex-direction: column; gap: 2rem; width: 100%; }
-.breadcrumb { display: flex; align-items: center; gap: .55rem; color: var(--muted); font-size: .9rem; }
-.breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
-.eyebrow { display: inline-flex; margin-bottom: .75rem; padding: .35rem .75rem; border-radius: 999px; background: rgba(255,255,255,.75); color: var(--primary); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-.page-header { padding: 1.5rem 1.75rem; border: 1px solid var(--stroke); border-radius: 20px; background: linear-gradient(135deg,rgba(90,59,231,.12),rgba(255,108,136,.12)); }
-:host ::ng-deep .page-header .vc-heading { margin: 0 0 .35rem; color: var(--ink); font-size: 2rem; line-height: 1.2; }
-:host ::ng-deep .page-header .vc-text { margin: 0; color: var(--muted); }
-.table-card { background: rgba(255,255,255,.94); border: 1px solid var(--stroke); border-radius: 20px; box-shadow: 0 20px 45px rgba(44,56,120,.12); padding: 1.6rem; }
+.appointments-page { color: var(--color-text); display: flex; flex-direction: column; gap: 2rem; width: 100%; }
+.breadcrumb { display: flex; align-items: center; gap: .55rem; color: var(--color-muted); font-size: .9rem; }
+.breadcrumb a { color: var(--color-primary); text-decoration: none; font-weight: 600; }
+.page-header { display: flex; justify-content: space-between; align-items: center; gap: 2rem; padding: 1.5rem 1.75rem; border: 1px solid rgba(90,59,231,.12); border-radius: 20px; background: linear-gradient(135deg,rgba(90,59,231,.12),rgba(255,108,136,.12)); }
+.eyebrow { display: inline-flex; margin-bottom: .75rem; padding: .35rem .75rem; border-radius: 999px; background: rgba(255,255,255,.75); color: var(--color-primary); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+:host ::ng-deep .page-header .vc-heading { margin: 0 0 .35rem; color: var(--color-text); font-size: 2rem; line-height: 1.2; }
+:host ::ng-deep .page-header .vc-text { margin: 0; color: var(--color-muted); }
+.table-card { background: rgba(255,255,255,.94); border: 1px solid rgba(90,59,231,.14); border-radius: 20px; box-shadow: 0 20px 45px rgba(44,56,120,.12); padding: 1.6rem; }
 .table-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
 .primary-action { border-radius: 999px; padding: .8rem 1.25rem; background: linear-gradient(135deg,#6e4ef5,#ff6c88); color: #fff; font-weight: 700; text-decoration: none; }
 :host ::ng-deep .section-heading .vc-heading { margin: 0 0 .25rem; }
@@ -16,11 +16,11 @@
 .table-wrapper { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; min-width: 820px; }
 th, td { text-align: left; padding: .9rem .7rem; border-bottom: 1px solid #ececf5; }
-th { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
-.empty { text-align: center; color: var(--muted); padding: 2rem; }
-.status { display: inline-flex; padding: .35rem .7rem; border-radius: 999px; background: #f0edff; color: var(--primary); font-size: .78rem; font-weight: 700; }
+th { color: var(--color-muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
+.empty { text-align: center; color: var(--color-muted); padding: 2rem; }
+.status { display: inline-flex; padding: .35rem .7rem; border-radius: 999px; background: #f0edff; color: var(--color-primary); font-size: .78rem; font-weight: 700; }
 .status[data-status="Today"], .status[data-status="Approaching"] { background: #fff0dc; color: #9a5700; }
 .status[data-status="Overdue"], .status[data-status="NoShow"] { background: #ffe9ed; color: #a12740; }
 .status[data-status="Completed"] { background: #e5faef; color: #14724a; }
 .status[data-status="Cancelled"] { background: #ededf2; color: #67677a; }
-@media (max-width: 720px) { .table-toolbar { align-items: stretch; flex-direction: column; } .primary-action { text-align: center; } }
+@media (max-width: 720px) { .page-header, .table-toolbar { align-items: stretch; flex-direction: column; } .primary-action { text-align: center; } }

@@ -1,84 +1,25 @@
 <main class="appointments-page">
   <nav class="breadcrumb"><a routerLink="/dashboard">Dashboard</a><span>/</span><span>Atendimentos</span></nav>
   <header class="page-header">
-    <div>
-      <span class="eyebrow">Agenda clinica</span>
-      <vc-heading [level]="1">Atendimentos</vc-heading>
-      <vc-text [muted]="true">Acompanhe a agenda, os profissionais e a proximidade de cada atendimento.</vc-text>
-    </div>
+    <div><span class="eyebrow">Agenda clínica</span><vc-heading [level]="1">Atendimentos</vc-heading><vc-text [muted]="true">Acompanhe a agenda, os profissionais e a proximidade de cada atendimento.</vc-text></div>
   </header>
-
   @if (errorMessage()) { <p class="message error" role="alert">{{ errorMessage() }}</p> }
-  @if (successMessage()) { <p class="message success" role="status">{{ successMessage() }}</p> }
-
   <section class="table-card">
     <div class="table-toolbar">
-      <div class="section-heading">
-        <vc-heading [level]="2">Todos os agendamentos</vc-heading>
-        <vc-text [muted]="true">Acompanhe quando cada atendimento esta se aproximando.</vc-text>
-      </div>
-      <vc-button type="button" (click)="openFormModal()">Cadastrar atendimento</vc-button>
+      <div class="section-heading"><vc-heading [level]="2">Todos os agendamentos</vc-heading><vc-text [muted]="true">Acompanhe quando cada atendimento está se aproximando.</vc-text></div>
+      <a class="primary-action" routerLink="/dashboard/agenda/novo">Cadastrar atendimento</a>
     </div>
     <div class="table-wrapper">
       <table>
         <thead><tr><th>Paciente</th><th>Telefone</th><th>Data e hora</th><th>Profissional</th><th>Procedimento</th><th>Status</th></tr></thead>
         <tbody>
-          @if (loading()) {
-            <tr><td colspan="6" class="empty">Carregando agendamentos...</td></tr>
-          } @else if (appointments().length === 0) {
-            <tr><td colspan="6" class="empty">Nenhum atendimento agendado.</td></tr>
-          } @else {
-            @for (appointment of appointments(); track appointment.id) {
-              <tr>
-                <td><strong>{{ appointment.patientName || appointment.patientId }}</strong></td>
-                <td>{{ appointment.phoneNumber || '—' }}</td>
-                <td>{{ appointment.startsAt | date:'dd/MM/yyyy HH:mm' }}</td>
-                <td>{{ appointment.employeeName || appointment.employeeId }}</td>
-                <td>{{ appointment.proceedingName || appointment.proceedingId }}</td>
-                <td><span class="status" [attr.data-status]="appointment.scheduleStatus">{{ statusLabel(appointment.scheduleStatus) }}</span></td>
-              </tr>
-            }
-          }
+          @if (loading()) { <tr><td colspan="6" class="empty">Carregando agendamentos...</td></tr> }
+          @else if (appointments().length === 0) { <tr><td colspan="6" class="empty">Nenhum atendimento agendado.</td></tr> }
+          @else { @for (appointment of appointments(); track appointment.id) {
+            <tr><td><strong>{{ appointment.patientName || appointment.patientId }}</strong></td><td>{{ appointment.phoneNumber || '—' }}</td><td>{{ appointment.startsAt | date:'dd/MM/yyyy HH:mm' }}</td><td>{{ appointment.employeeName || appointment.employeeId }}</td><td>{{ appointment.proceedingName || appointment.proceedingId }}</td><td><span class="status" [attr.data-status]="appointment.scheduleStatus">{{ statusLabel(appointment.scheduleStatus) }}</span></td></tr>
+          } }
         </tbody>
       </table>
     </div>
   </section>
-
-  @if (formModalOpen()) {
-    <div class="modal-backdrop" (click)="closeFormModal()">
-      <section class="modal appointment-modal" role="dialog" aria-modal="true" aria-labelledby="appointment-title" (click)="$event.stopPropagation()">
-        <div><vc-heading id="appointment-title" [level]="2">Cadastrar atendimento</vc-heading><vc-text [muted]="true">Informe paciente, horario, profissional e procedimento.</vc-text></div>
-        <form [formGroup]="form" (ngSubmit)="submit()">
-          <div class="form-grid">
-            <label>Nome do paciente <input type="text" formControlName="patientName" /></label>
-            <vc-phone-input id="appointment-phone" label="Telefone" formControlName="phoneNumber"></vc-phone-input>
-            <vc-autocomplete id="appointment-employee" label="Funcionario responsavel" placeholder="Pesquise por nome, email ou telefone" formControlName="employeeName" [options]="employeeOptions()" [loading]="employeeLoading()" [error]="employeeLookupError()" loadingText="Pesquisando funcionarios..." emptyText="Nenhum funcionario encontrado." (searchChange)="searchEmployee($event)" (selectionChange)="selectEmployeeOption($event)"></vc-autocomplete>
-            <vc-autocomplete id="appointment-proceeding" label="Procedimento" placeholder="Pesquise por nome ou codigo" formControlName="proceedingName" [options]="proceedingOptions()" [loading]="proceedingLoading()" [error]="proceedingLookupError()" loadingText="Pesquisando procedimentos..." emptyText="Nenhum procedimento encontrado." (searchChange)="searchProceeding($event)" (selectionChange)="selectProceedingOption($event)"></vc-autocomplete>
-            <vc-date-time-input id="appointment-start" label="Data e hora de inicio" formControlName="startsAt"></vc-date-time-input>
-            <vc-date-time-input id="appointment-end" label="Data e hora de termino" formControlName="endsAt"></vc-date-time-input>
-          </div>
-          <div class="reminder-row">
-            <div><strong>Notificacao</strong><span>{{ reminderValue() ? reminderValue() + ' ' + (reminderUnit() === 'Days' ? 'dia(s)' : 'hora(s)') + ' antes' : 'Sem lembrete configurado' }}</span></div>
-            <vc-button type="button" variant="secondary" (click)="openReminderModal()">Configurar notificacao</vc-button>
-          </div>
-          @if (errorMessage()) { <p class="message error" role="alert">{{ errorMessage() }}</p> }
-          <div class="modal-actions"><vc-button type="button" variant="secondary" (click)="closeFormModal()">Cancelar</vc-button><vc-button type="submit" [loading]="saving()">Salvar atendimento</vc-button></div>
-        </form>
-      </section>
-    </div>
-  }
-
-  @if (reminderModalOpen()) {
-    <div class="modal-backdrop reminder-backdrop" (click)="closeReminderModal()">
-      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="reminder-title" (click)="$event.stopPropagation()">
-        <vc-heading id="reminder-title" [level]="2">Configurar notificacao</vc-heading>
-        <vc-text [muted]="true">Escolha quanto tempo antes do atendimento deseja ser avisado.</vc-text>
-        <div class="modal-fields">
-          <label>Antecedencia <input #reminderInput type="number" min="1" [value]="reminderValue() ?? 1" /></label>
-          <label>Unidade<select #reminderUnitSelect [value]="reminderUnit()"><option value="Hours">Horas</option><option value="Days">Dias</option></select></label>
-        </div>
-        <div class="modal-actions"><button type="button" class="text-button" (click)="clearReminder()">Remover lembrete</button><vc-button type="button" variant="secondary" (click)="closeReminderModal()">Cancelar</vc-button><vc-button type="button" (click)="saveReminder(reminderInput.value, reminderUnitSelect.value)">Salvar</vc-button></div>
-      </section>
-    </div>
-  }
 </main>

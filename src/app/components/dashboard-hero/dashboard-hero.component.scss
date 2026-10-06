@@ -176,13 +176,18 @@
 }
 
 @media (max-width: 640px) {
+  .hero { gap: 1rem; margin-bottom: 1rem; }
   .hero-copy h1,
   :host ::ng-deep .hero-copy vc-heading .vc-heading {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
   }
+
+  .hero-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  .metric-card { padding: .9rem; }
+  .metric-card:first-child { grid-column: 1 / -1; }
 }

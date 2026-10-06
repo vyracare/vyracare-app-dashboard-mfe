@@ -147,3 +147,9 @@
     align-items: flex-start;
   }
 }
+
+@media (max-width: 640px) {
+  .panel { padding: 1rem; border-radius: 16px; }
+  .panel-header { margin-bottom: 1rem; }
+  .finance-grid { grid-template-columns: 1fr; }
+}

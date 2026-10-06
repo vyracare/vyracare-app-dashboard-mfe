@@ -28,6 +28,7 @@
 
 @media (max-width: 640px) {
   .dashboard {
-    padding: 1.5rem;
+    min-height: auto;
+    padding: 0;
   }
 }

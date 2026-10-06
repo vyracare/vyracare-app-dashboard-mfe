@@ -23,4 +23,26 @@ th { color: var(--color-muted); font-size: .78rem; text-transform: uppercase; le
 .status[data-status="Overdue"], .status[data-status="NoShow"] { background: #ffe9ed; color: #a12740; }
 .status[data-status="Completed"] { background: #e5faef; color: #14724a; }
 .status[data-status="Cancelled"] { background: #ededf2; color: #67677a; }
-@media (max-width: 720px) { .page-header, .table-toolbar { align-items: stretch; flex-direction: column; } .primary-action { text-align: center; } }
+@media (max-width: 720px) {
+  .appointments-page { gap: 1rem; }
+  .breadcrumb { overflow-x: auto; white-space: nowrap; font-size: .78rem; }
+  .page-header { padding: 1rem; border-radius: 16px; }
+  :host ::ng-deep .page-header .vc-heading { font-size: 1.55rem; }
+  .eyebrow { margin-bottom: .55rem; font-size: .67rem; }
+  .table-card { padding: 1rem; border-radius: 16px; }
+  .page-header, .table-toolbar { align-items: stretch; flex-direction: column; }
+  .primary-action { min-height: 44px; box-sizing: border-box; text-align: center; }
+  .table-wrapper { overflow: visible; }
+  table, tbody { display: block; width: 100%; min-width: 0; }
+  thead { display: none; }
+  tr { display: grid; gap: .65rem; margin-top: .8rem; padding: 1rem; border: 1px solid #ececf5; border-radius: 14px; background: #fcfbff; }
+  td { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 0; border: 0; text-align: right; overflow-wrap: anywhere; }
+  td::before { flex: 0 0 auto; color: var(--color-muted); font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  td:nth-child(2)::before { content: 'Telefone'; }
+  td:nth-child(3)::before { content: 'Data e hora'; }
+  td:nth-child(4)::before { content: 'Profissional'; }
+  td:nth-child(5)::before { content: 'Procedimento'; }
+  td:nth-child(6)::before { content: 'Status'; }
+  td:first-child { display: block; text-align: left; font-size: 1rem; }
+  td.empty { display: block; padding: .75rem 0; text-align: center; }
+}

@@ -34,7 +34,13 @@ input:focus, select:focus { outline: 2px solid rgba(90,59,231,.18); border-color
 .modal-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.4rem 0; }
 
 @media (max-width: 720px) {
-  .page-header, .form-card { padding: 1.5rem; }
+  .create-page { gap: 1rem; }
+  .breadcrumb { overflow-x: auto; white-space: nowrap; font-size: .78rem; }
+  .page-header, .form-card { padding: 1rem; border-radius: 16px; }
+  :host ::ng-deep .page-header .vc-heading { font-size: 1.55rem; }
   .form-grid, .modal-fields { grid-template-columns: 1fr; }
+  input, select { min-height: 44px; font-size: 1rem; }
   .reminder-row, .form-actions, .modal-actions { align-items: stretch; flex-direction: column; }
+  .modal-backdrop { place-items: end center; padding: 0; }
+  .modal { width: 100%; max-height: 88dvh; padding: 1.25rem; border-radius: 20px 20px 0 0; }
 }

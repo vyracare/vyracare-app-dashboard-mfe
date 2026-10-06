@@ -9,7 +9,8 @@ import {
   VcDateTimeInputComponent,
   VcHeadingComponent,
   VcPhoneInputComponent,
-  VcTextComponent
+  VcTextComponent,
+  VcToastService
 } from '@vyracare/design-system';
 import type { VcAutocompleteOption } from '@vyracare/design-system';
 import { Subject, catchError, debounceTime, of, switchMap } from 'rxjs';
@@ -82,7 +83,8 @@ export class AppointmentCreatePageComponent {
   constructor(
     private readonly dashboardService: DashboardService,
     private readonly notificationService: AppointmentNotificationService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly toast: VcToastService
   ) {
     this.employeeSearch.pipe(
       debounceTime(250),
@@ -91,7 +93,9 @@ export class AppointmentCreatePageComponent {
         this.employeeLookupError.set('');
         return this.dashboardService.searchEmployees(search).pipe(
           catchError(() => {
-            this.employeeLookupError.set('Não foi possível pesquisar os funcionários.');
+            const message = 'Não foi possível pesquisar os funcionários.';
+            this.employeeLookupError.set(message);
+            this.toast.error('Falha ao pesquisar funcionários', message);
             return of([]);
           })
         );
@@ -109,7 +113,9 @@ export class AppointmentCreatePageComponent {
         this.proceedingLookupError.set('');
         return this.dashboardService.searchProceedings(search).pipe(
           catchError(() => {
-            this.proceedingLookupError.set('Não foi possível pesquisar os procedimentos.');
+            const message = 'Não foi possível pesquisar os procedimentos.';
+            this.proceedingLookupError.set(message);
+            this.toast.error('Falha ao pesquisar procedimentos', message);
             return of([]);
           })
         );
@@ -244,11 +250,14 @@ export class AppointmentCreatePageComponent {
     this.dashboardService.createAppointment(request).subscribe({
       next: () => {
         this.saving.set(false);
+        this.toast.success('Atendimento cadastrado', 'O atendimento foi salvo na agenda.');
         void this.router.navigate(['/dashboard/agenda']);
       },
-      error: error => {
+      error: () => {
         this.saving.set(false);
-        this.errorMessage.set(error?.error?.message ?? 'Não foi possível salvar o atendimento.');
+        const message = 'Não foi possível salvar o atendimento. Tente novamente.';
+        this.errorMessage.set(message);
+        this.toast.error('Não foi possível cadastrar o atendimento', message);
       }
     });
   }

@@ -69,7 +69,7 @@ describe('AppointmentCreatePageComponent', () => {
     dashboardService.createAppointment.mockReturnValue(throwError(() => ({ error: { message: 'Conflito' } })));
     component.form.patchValue({ endsAt: '2026-10-05T12:00' });
     component.submit();
-    expect(component.errorMessage()).toBe('Conflito');
+    expect(component.errorMessage()).toBe('Não foi possível salvar o atendimento. Tente novamente.');
   });
 
   it('should use shared phone and date-time inputs', () => {

@@ -187,6 +187,16 @@
     align-items: stretch;
   }
 
+  :host ::ng-deep .hero-actions vc-button {
+    display: flex;
+    width: 100%;
+  }
+
+  :host ::ng-deep .hero-actions vc-button .vc-button__inner {
+    width: 100%;
+    min-height: 3.25rem;
+  }
+
   .hero-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
   .metric-card { padding: .9rem; }
   .metric-card:first-child { grid-column: 1 / -1; }

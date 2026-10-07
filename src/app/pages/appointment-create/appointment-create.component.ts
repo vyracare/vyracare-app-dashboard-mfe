@@ -8,11 +8,13 @@ import {
   VcButtonComponent,
   VcDateTimeInputComponent,
   VcHeadingComponent,
+  VcInputComponent,
   VcPhoneInputComponent,
+  VcSelectComponent,
   VcTextComponent,
   VcToastService
 } from '@vyracare/design-system';
-import type { VcAutocompleteOption } from '@vyracare/design-system';
+import type { VcAutocompleteOption, VcSelectOption } from '@vyracare/design-system';
 import { Subject, catchError, debounceTime, of, switchMap } from 'rxjs';
 import {
   CreateAppointmentRequest,
@@ -34,7 +36,9 @@ import { DashboardService } from '../../services/dashboard.service';
     VcButtonComponent,
     VcDateTimeInputComponent,
     VcHeadingComponent,
+    VcInputComponent,
     VcPhoneInputComponent,
+    VcSelectComponent,
     VcTextComponent
   ],
   templateUrl: './appointment-create.component.html',
@@ -52,6 +56,10 @@ export class AppointmentCreatePageComponent {
   readonly reminderModalOpen = signal(false);
   readonly reminderValue = signal<number | null>(null);
   readonly reminderUnit = signal<ReminderOffsetUnit>('Hours');
+  readonly reminderUnitOptions: VcSelectOption[] = [
+    { label: 'Horas', value: 'Hours' },
+    { label: 'Dias', value: 'Days' }
+  ];
   readonly employeeResults = signal<EmployeeLookup[]>([]);
   readonly proceedingResults = signal<ProceedingLookup[]>([]);
   readonly selectedEmployee = signal<EmployeeLookup | null>(null);
@@ -78,6 +86,10 @@ export class AppointmentCreatePageComponent {
     proceedingName: ['', Validators.required],
     startsAt: ['', Validators.required],
     endsAt: ['', Validators.required]
+  });
+  readonly reminderForm = this.formBuilder.nonNullable.group({
+    value: ['1', [Validators.required, Validators.pattern(/^[1-9]\d*$/)]],
+    unit: ['Hours']
   });
 
   constructor(
@@ -129,6 +141,10 @@ export class AppointmentCreatePageComponent {
 
   /** Abre a configuração de antecedência da notificação. */
   openReminderModal(): void {
+    this.reminderForm.setValue({
+      value: String(this.reminderValue() ?? 1),
+      unit: this.reminderUnit()
+    });
     this.reminderModalOpen.set(true);
   }
 
@@ -188,12 +204,14 @@ export class AppointmentCreatePageComponent {
   }
 
   /** Valida e salva a antecedência escolhida depois de solicitar permissão. */
-  async saveReminder(value: string, unit: string): Promise<void> {
-    const parsedValue = Number(value);
-    if (!Number.isInteger(parsedValue) || parsedValue <= 0) {
+  async saveReminder(): Promise<void> {
+    if (this.reminderForm.invalid) {
+      this.reminderForm.markAllAsTouched();
       this.errorMessage.set('Informe uma antecedência maior que zero.');
       return;
     }
+    const { value, unit } = this.reminderForm.getRawValue();
+    const parsedValue = Number(value);
     this.reminderValue.set(parsedValue);
     this.reminderUnit.set(unit === 'Days' ? 'Days' : 'Hours');
     await this.notificationService.requestPermission();

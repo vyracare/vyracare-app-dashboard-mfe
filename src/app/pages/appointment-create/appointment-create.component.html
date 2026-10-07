@@ -13,7 +13,7 @@
   <section class="form-card">
     <form [formGroup]="form" (ngSubmit)="submit()">
       <div class="form-grid">
-        <label>Nome do paciente <input type="text" formControlName="patientName" /></label>
+        <vc-input id="appointment-patient" label="Nome do paciente" formControlName="patientName" [required]="true" [error]="form.controls.patientName.touched && form.controls.patientName.invalid ? 'Informe o nome do paciente.' : ''"></vc-input>
         <vc-phone-input id="appointment-phone" label="Telefone" formControlName="phoneNumber"></vc-phone-input>
         <vc-autocomplete id="appointment-employee" label="Funcionário responsável" placeholder="Pesquise por nome, email ou telefone" formControlName="employeeName" [options]="employeeOptions()" [loading]="employeeLoading()" [error]="employeeLookupError()" loadingText="Pesquisando funcionários..." emptyText="Nenhum funcionário encontrado." (searchChange)="searchEmployee($event)" (selectionChange)="selectEmployeeOption($event)"></vc-autocomplete>
         <vc-autocomplete id="appointment-proceeding" label="Procedimento" placeholder="Pesquise por nome ou código" formControlName="proceedingName" [options]="proceedingOptions()" [loading]="proceedingLoading()" [error]="proceedingLookupError()" loadingText="Pesquisando procedimentos..." emptyText="Nenhum procedimento encontrado." (searchChange)="searchProceeding($event)" (selectionChange)="selectProceedingOption($event)"></vc-autocomplete>
@@ -36,15 +36,15 @@
 
   @if (reminderModalOpen()) {
     <div class="modal-backdrop" (click)="closeReminderModal()">
-      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="reminder-title" (click)="$event.stopPropagation()">
+      <form class="modal" [formGroup]="reminderForm" (ngSubmit)="saveReminder()" role="dialog" aria-modal="true" aria-labelledby="reminder-title" (click)="$event.stopPropagation()">
         <vc-heading id="reminder-title" [level]="2">Configurar notificação</vc-heading>
         <vc-text [muted]="true">Escolha quanto tempo antes do atendimento deseja ser avisado.</vc-text>
         <div class="modal-fields">
-          <label>Antecedência <input #reminderInput type="number" min="1" [value]="reminderValue() ?? 1" /></label>
-          <label>Unidade<select #reminderUnitSelect [value]="reminderUnit()"><option value="Hours">Horas</option><option value="Days">Dias</option></select></label>
+          <vc-input id="reminder-value" label="Antecedência" type="number" formControlName="value" [required]="true" [error]="reminderForm.controls.value.touched && reminderForm.controls.value.invalid ? 'Informe um valor maior que zero.' : ''"></vc-input>
+          <vc-select id="reminder-unit" label="Unidade" formControlName="unit" [options]="reminderUnitOptions"></vc-select>
         </div>
-        <div class="modal-actions"><button type="button" class="text-button" (click)="clearReminder()">Remover lembrete</button><vc-button type="button" variant="secondary" (click)="closeReminderModal()">Cancelar</vc-button><vc-button type="button" (click)="saveReminder(reminderInput.value, reminderUnitSelect.value)">Salvar</vc-button></div>
-      </section>
+        <div class="modal-actions"><vc-button type="button" variant="ghost" (click)="clearReminder()">Remover lembrete</vc-button><vc-button type="button" variant="secondary" (click)="closeReminderModal()">Cancelar</vc-button><vc-button type="submit">Salvar</vc-button></div>
+      </form>
     </div>
   }
 </main>

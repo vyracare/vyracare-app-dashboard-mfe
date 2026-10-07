@@ -35,13 +35,15 @@ describe('AppointmentCreatePageComponent', () => {
   it('should configure, validate and clear a reminder', async () => {
     const component = TestBed.createComponent(AppointmentCreatePageComponent).componentInstance;
     component.openReminderModal();
-    await component.saveReminder('2', 'Days');
+    component.reminderForm.setValue({ value: '2', unit: 'Days' });
+    await component.saveReminder();
     expect(component.reminderValue()).toBe(2);
     expect(component.reminderUnit()).toBe('Days');
     expect(notificationService.requestPermission).toHaveBeenCalled();
     component.clearReminder();
     expect(component.reminderValue()).toBeNull();
-    await component.saveReminder('0', 'Hours');
+    component.reminderForm.setValue({ value: '0', unit: 'Hours' });
+    await component.saveReminder();
     expect(component.errorMessage()).toContain('maior que zero');
   });
 

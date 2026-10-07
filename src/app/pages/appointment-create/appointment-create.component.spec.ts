@@ -45,6 +45,18 @@ describe('AppointmentCreatePageComponent', () => {
     expect(component.errorMessage()).toContain('maior que zero');
   });
 
+  it('should render reminder actions inside the modal footer', () => {
+    const fixture = TestBed.createComponent(AppointmentCreatePageComponent);
+    fixture.componentInstance.openReminderModal();
+    fixture.detectChanges();
+    const modal = fixture.nativeElement.querySelector('.modal');
+    const actions = Array.from(modal.querySelectorAll('.modal-actions button')).map(
+      (button: Element) => button.textContent?.trim()
+    );
+
+    expect(actions).toEqual(['Remover lembrete', 'Cancelar', 'Salvar']);
+  });
+
   it('should create an appointment and return to the list', () => {
     dashboardService.createAppointment.mockReturnValue(of({}));
     const component = TestBed.createComponent(AppointmentCreatePageComponent).componentInstance;

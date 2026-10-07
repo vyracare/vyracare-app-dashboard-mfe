@@ -57,6 +57,14 @@ input:focus, select:focus { outline: 2px solid rgba(90,59,231,.18); border-color
     font-size: 1rem;
   }
   .reminder-row, .modal-actions { align-items: stretch; flex-direction: column; }
+  :host ::ng-deep .reminder-row vc-button {
+    display: flex;
+    width: 100%;
+  }
+  :host ::ng-deep .reminder-row vc-button .vc-button__inner {
+    width: 100%;
+    min-height: 3rem;
+  }
   .form-actions {
     flex-direction: row;
     justify-content: space-between;

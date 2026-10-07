@@ -8,11 +8,13 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  color: var(--ink);
+  width: 100%;
+  color: var(--color-text);
 }
 
-.breadcrumb { display: flex; align-items: center; gap: .55rem; color: var(--muted); font-size: .9rem; }
-.breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+.breadcrumb { display: flex; align-items: center; gap: .55rem; color: var(--color-muted); font-size: .9rem; }
+.breadcrumb a { color: var(--color-primary); text-decoration: none; font-weight: 600; }
+.breadcrumb span { color: var(--color-muted); }
 .page-header { padding: 2.4rem 2.7rem; border: 1px solid var(--stroke); border-radius: 24px; background: linear-gradient(135deg, rgba(90,59,231,.13), rgba(255,108,136,.13)); }
 .eyebrow { display: inline-flex; margin-bottom: 1rem; padding: .4rem .9rem; border-radius: 999px; background: rgba(255,255,255,.78); font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; }
 :host ::ng-deep .page-header .vc-heading { margin: 0 0 .45rem; }

@@ -41,7 +41,21 @@ input:focus, select:focus { outline: 2px solid rgba(90,59,231,.18); border-color
   .page-header, .form-card { padding: 1rem; border-radius: 16px; }
   :host ::ng-deep .page-header .vc-heading { font-size: 1.55rem; }
   .form-grid, .modal-fields { grid-template-columns: 1fr; }
-  input, select { min-height: 44px; font-size: 1rem; }
+  input, select {
+    box-sizing: border-box;
+    height: 2.75rem;
+    min-height: 2.75rem;
+    padding-block: 0.55rem;
+    font-size: 1rem;
+  }
+  :host ::ng-deep .form-grid .vc-input__field,
+  :host ::ng-deep .form-grid .vc-autocomplete__input {
+    box-sizing: border-box;
+    height: 2.75rem;
+    min-height: 2.75rem;
+    padding-block: 0.55rem;
+    font-size: 1rem;
+  }
   .reminder-row, .modal-actions { align-items: stretch; flex-direction: column; }
   .form-actions {
     flex-direction: row;

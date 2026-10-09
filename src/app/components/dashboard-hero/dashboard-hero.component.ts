@@ -4,7 +4,8 @@ import {
   VcButtonComponent,
   VcCardComponent,
   VcHeadingComponent,
-  VcTextComponent
+  VcTextComponent,
+  VcToastService
 } from '@vyracare/design-system';
 import { DashboardSummary } from '../../models/dashboard-summary.model';
 import { DashboardService } from '../../services/dashboard.service';
@@ -24,7 +25,8 @@ export class DashboardHeroComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly dashboardService: DashboardService
+    private readonly dashboardService: DashboardService,
+    private readonly toast: VcToastService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +38,7 @@ export class DashboardHeroComponent implements OnInit {
       error: () => {
         this.loadError.set(true);
         this.loading.set(false);
+        this.toast.error('Falha ao carregar o painel', 'Não foi possível consultar o resumo da clínica.');
       }
     });
   }

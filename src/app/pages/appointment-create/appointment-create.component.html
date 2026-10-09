@@ -1,0 +1,50 @@
+<main class="create-page">
+  <nav class="breadcrumb">
+    <a routerLink="/dashboard">Dashboard</a><span>/</span>
+    <a routerLink="/dashboard/agenda">Atendimentos</a><span>/</span><span>Cadastrar</span>
+  </nav>
+
+  <header class="page-header">
+    <span class="eyebrow">Agenda clínica</span>
+    <vc-heading [level]="1">Cadastrar atendimento</vc-heading>
+    <vc-text [muted]="true">Informe paciente, horário, profissional e procedimento.</vc-text>
+  </header>
+
+  <section class="form-card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <vc-input id="appointment-patient" label="Nome do paciente" formControlName="patientName" [required]="true" [error]="form.controls.patientName.touched && form.controls.patientName.invalid ? 'Informe o nome do paciente.' : ''"></vc-input>
+        <vc-phone-input id="appointment-phone" label="Telefone" formControlName="phoneNumber"></vc-phone-input>
+        <vc-autocomplete id="appointment-employee" label="Funcionário responsável" placeholder="Pesquise por nome, email ou telefone" formControlName="employeeName" [options]="employeeOptions()" [loading]="employeeLoading()" [error]="employeeLookupError()" loadingText="Pesquisando funcionários..." emptyText="Nenhum funcionário encontrado." (searchChange)="searchEmployee($event)" (selectionChange)="selectEmployeeOption($event)"></vc-autocomplete>
+        <vc-autocomplete id="appointment-proceeding" label="Procedimento" placeholder="Pesquise por nome ou código" formControlName="proceedingName" [options]="proceedingOptions()" [loading]="proceedingLoading()" [error]="proceedingLookupError()" loadingText="Pesquisando procedimentos..." emptyText="Nenhum procedimento encontrado." (searchChange)="searchProceeding($event)" (selectionChange)="selectProceedingOption($event)"></vc-autocomplete>
+        <vc-date-time-input id="appointment-start" label="Data e hora de início" formControlName="startsAt"></vc-date-time-input>
+        <vc-date-time-input id="appointment-end" label="Data e hora de término" formControlName="endsAt"></vc-date-time-input>
+      </div>
+
+      <div class="reminder-row">
+        <div><strong>Notificação</strong><span>{{ reminderValue() ? reminderValue() + ' ' + (reminderUnit() === 'Days' ? 'dia(s)' : 'hora(s)') + ' antes' : 'Sem lembrete configurado' }}</span></div>
+        <vc-button type="button" variant="secondary" (click)="openReminderModal()">Configurar notificação</vc-button>
+      </div>
+
+      @if (errorMessage()) { <p class="message error" role="alert">{{ errorMessage() }}</p> }
+      <div class="form-actions">
+        <vc-button type="button" variant="secondary" (click)="cancel()">Cancelar</vc-button>
+        <vc-button type="submit" [loading]="saving()">Salvar atendimento</vc-button>
+      </div>
+    </form>
+  </section>
+
+  @if (reminderModalOpen()) {
+    <div class="modal-backdrop" (click)="closeReminderModal()">
+      <form class="modal" [formGroup]="reminderForm" (ngSubmit)="saveReminder()" role="dialog" aria-modal="true" aria-labelledby="reminder-title" (click)="$event.stopPropagation()">
+        <vc-heading id="reminder-title" [level]="2">Configurar notificação</vc-heading>
+        <vc-text [muted]="true">Escolha quanto tempo antes do atendimento deseja ser avisado.</vc-text>
+        <div class="modal-fields">
+          <vc-input id="reminder-value" label="Antecedência" type="number" formControlName="value" [required]="true" [error]="reminderForm.controls.value.touched && reminderForm.controls.value.invalid ? 'Informe um valor maior que zero.' : ''"></vc-input>
+          <vc-select id="reminder-unit" label="Unidade" formControlName="unit" [options]="reminderUnitOptions"></vc-select>
+        </div>
+        <div class="modal-actions"><vc-button type="button" variant="ghost" (click)="clearReminder()">Remover lembrete</vc-button><vc-button type="button" variant="secondary" (click)="closeReminderModal()">Cancelar</vc-button><vc-button type="submit">Salvar</vc-button></div>
+      </form>
+    </div>
+  }
+</main>

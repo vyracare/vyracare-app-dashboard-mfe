@@ -1,93 +1,25 @@
 <main class="appointments-page">
+  <nav class="breadcrumb"><a routerLink="/dashboard">Dashboard</a><span>/</span><span>Atendimentos</span></nav>
   <header class="page-header">
-    <div>
-      <button class="back-button" type="button" (click)="goBack()">← Voltar ao dashboard</button>
-      <vc-heading [level]="1">Novo atendimento</vc-heading>
-      <vc-text [muted]="true">Agende o paciente, defina o profissional e programe um lembrete.</vc-text>
-    </div>
+    <div><span class="eyebrow">Agenda clínica</span><vc-heading [level]="1">Atendimentos</vc-heading><vc-text [muted]="true">Acompanhe a agenda, os profissionais e a proximidade de cada atendimento.</vc-text></div>
   </header>
-
-  <section class="form-card">
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <div class="form-grid">
-        <label>Nome do paciente <input type="text" formControlName="patientName" /></label>
-        <label>Telefone <input type="tel" formControlName="phoneNumber" placeholder="(00) 00000-0000" /></label>
-        <label>Funcionário responsável <input type="text" formControlName="employeeName" /></label>
-        <label>Procedimento <input type="text" formControlName="proceedingName" /></label>
-        <label>Data e hora de início <input type="datetime-local" formControlName="startsAt" /></label>
-        <label>Data e hora de término <input type="datetime-local" formControlName="endsAt" /></label>
-      </div>
-
-      <div class="reminder-row">
-        <div>
-          <strong>Notificação</strong>
-          <span>{{ reminderValue() ? reminderValue() + ' ' + (reminderUnit() === 'Days' ? 'dia(s)' : 'hora(s)') + ' antes' : 'Sem lembrete configurado' }}</span>
-        </div>
-        <vc-button type="button" variant="secondary" (click)="openReminderModal()">Configurar notificação</vc-button>
-      </div>
-
-      @if (errorMessage()) { <p class="message error" role="alert">{{ errorMessage() }}</p> }
-      @if (successMessage()) { <p class="message success" role="status">{{ successMessage() }}</p> }
-
-      <div class="form-actions">
-        <vc-button type="submit" [loading]="saving()">Salvar atendimento</vc-button>
-      </div>
-    </form>
-  </section>
-
+  @if (errorMessage()) { <p class="message error" role="alert">{{ errorMessage() }}</p> }
   <section class="table-card">
-    <div class="section-heading">
-      <div>
-        <vc-heading [level]="2">Todos os agendamentos</vc-heading>
-        <vc-text [muted]="true">Acompanhe quando cada atendimento está se aproximando.</vc-text>
-      </div>
+    <div class="table-toolbar">
+      <div class="section-heading"><vc-heading [level]="2">Todos os agendamentos</vc-heading><vc-text [muted]="true">Acompanhe quando cada atendimento está se aproximando.</vc-text></div>
+      <a class="primary-action" routerLink="/dashboard/agenda/novo">Cadastrar atendimento</a>
     </div>
-
     <div class="table-wrapper">
       <table>
         <thead><tr><th>Paciente</th><th>Telefone</th><th>Data e hora</th><th>Profissional</th><th>Procedimento</th><th>Status</th></tr></thead>
         <tbody>
-          @if (loading()) {
-            <tr><td colspan="6" class="empty">Carregando agendamentos...</td></tr>
-          } @else if (appointments().length === 0) {
-            <tr><td colspan="6" class="empty">Nenhum atendimento agendado.</td></tr>
-          } @else {
-            @for (appointment of appointments(); track appointment.id) {
-              <tr>
-                <td><strong>{{ appointment.patientName || appointment.patientId }}</strong></td>
-                <td>{{ appointment.phoneNumber || '—' }}</td>
-                <td>{{ appointment.startsAt | date:'dd/MM/yyyy HH:mm' }}</td>
-                <td>{{ appointment.employeeName || appointment.employeeId }}</td>
-                <td>{{ appointment.proceedingName || appointment.proceedingId }}</td>
-                <td><span class="status" [attr.data-status]="appointment.scheduleStatus">{{ statusLabel(appointment.scheduleStatus) }}</span></td>
-              </tr>
-            }
-          }
+          @if (loading()) { <tr><td colspan="6" class="empty">Carregando agendamentos...</td></tr> }
+          @else if (appointments().length === 0) { <tr><td colspan="6" class="empty">Nenhum atendimento agendado.</td></tr> }
+          @else { @for (appointment of appointments(); track appointment.id) {
+            <tr><td><strong>{{ appointment.patientName || appointment.patientId }}</strong></td><td>{{ appointment.phoneNumber || '—' }}</td><td>{{ appointment.startsAt | date:'dd/MM/yyyy HH:mm' }}</td><td>{{ appointment.employeeName || appointment.employeeId }}</td><td>{{ appointment.proceedingName || appointment.proceedingId }}</td><td><span class="status" [attr.data-status]="appointment.scheduleStatus">{{ statusLabel(appointment.scheduleStatus) }}</span></td></tr>
+          } }
         </tbody>
       </table>
     </div>
   </section>
-
-  @if (reminderModalOpen()) {
-    <div class="modal-backdrop" (click)="closeReminderModal()">
-      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="reminder-title" (click)="$event.stopPropagation()">
-        <vc-heading id="reminder-title" [level]="2">Configurar notificação</vc-heading>
-        <vc-text [muted]="true">Escolha quanto tempo antes do atendimento deseja ser avisado.</vc-text>
-        <div class="modal-fields">
-          <label>Antecedência <input #reminderInput type="number" min="1" [value]="reminderValue() ?? 1" /></label>
-          <label>Unidade
-            <select #reminderUnitSelect [value]="reminderUnit()">
-              <option value="Hours">Horas</option>
-              <option value="Days">Dias</option>
-            </select>
-          </label>
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="text-button" (click)="clearReminder()">Remover lembrete</button>
-          <vc-button type="button" variant="secondary" (click)="closeReminderModal()">Cancelar</vc-button>
-          <vc-button type="button" (click)="saveReminder(reminderInput.value, reminderUnitSelect.value)">Salvar</vc-button>
-        </div>
-      </section>
-    </div>
-  }
 </main>

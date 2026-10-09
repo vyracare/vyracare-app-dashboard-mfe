@@ -176,13 +176,34 @@
 }
 
 @media (max-width: 640px) {
+  .hero { gap: 1rem; margin-bottom: 1rem; }
   .hero-copy h1,
   :host ::ng-deep .hero-copy vc-heading .vc-heading {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  :host ::ng-deep .hero-actions vc-button {
+    display: flex;
+    width: 100%;
+  }
+
+  :host ::ng-deep .hero-actions vc-button .vc-button__inner {
+    width: 100%;
+    min-height: 3.25rem;
+  }
+
+  .hero-metrics {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 0.75rem;
+  }
+
+  .metric-card {
+    padding: 1.1rem 1.3rem;
   }
 }

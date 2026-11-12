@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DashboardHeroComponent } from './components/dashboard-hero/dashboard-hero.component';
 import { DashboardQuickAccessComponent } from './components/dashboard-quick-access/dashboard-quick-access.component';
 import { DashboardFinanceComponent } from './components/dashboard-finance/dashboard-finance.component';
@@ -9,6 +9,7 @@ import { AppointmentNotificationService } from './services/appointment-notificat
   standalone: true,
   imports: [DashboardHeroComponent, DashboardQuickAccessComponent, DashboardFinanceComponent],
   templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.scss'
 })
 export class App implements OnInit {

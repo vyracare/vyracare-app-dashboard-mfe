@@ -1,5 +1,5 @@
 import { provideZonelessChangeDetection } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AppointmentNotificationService } from '../../services/appointment-notification.service';
@@ -98,20 +98,23 @@ describe('AppointmentCreatePageComponent', () => {
     expect(dateTimeInputs.every(input => input.type === 'datetime-local')).toBe(true);
   });
 
-  it('should search, map and select employees and proceedings', fakeAsync(() => {
+  it('should search, map and select employees and proceedings', () => {
+    jest.useFakeTimers();
     const component = TestBed.createComponent(AppointmentCreatePageComponent).componentInstance;
     component.searchEmployee('Ana');
     component.searchProceeding('CON');
-    tick(250);
+    jest.advanceTimersByTime(250);
     expect(dashboardService.searchEmployees).toHaveBeenCalledWith('Ana');
     expect(dashboardService.searchProceedings).toHaveBeenCalledWith('CON');
     component.selectEmployeeOption(component.employeeOptions()[0]);
     component.selectProceedingOption(component.proceedingOptions()[0]);
     expect(component.selectedEmployee()?.id).toBe('employee-1');
     expect(component.selectedProceeding()?.id).toBe('proceeding-1');
-  }));
+    jest.useRealTimers();
+  });
 
-  it('should handle short searches and lookup errors', fakeAsync(() => {
+  it('should handle short searches and lookup errors', () => {
+    jest.useFakeTimers();
     dashboardService.searchEmployees.mockReturnValue(throwError(() => new Error('offline')));
     dashboardService.searchProceedings.mockReturnValue(throwError(() => new Error('offline')));
     const component = TestBed.createComponent(AppointmentCreatePageComponent).componentInstance;
@@ -120,8 +123,9 @@ describe('AppointmentCreatePageComponent', () => {
     expect(component.employeeResults()).toEqual([]);
     component.searchEmployee('Ana');
     component.searchProceeding('CON');
-    tick(250);
+    jest.advanceTimersByTime(250);
     expect(component.employeeLookupError()).toContain('funcionários');
     expect(component.proceedingLookupError()).toContain('procedimentos');
-  }));
+    jest.useRealTimers();
+  });
 });

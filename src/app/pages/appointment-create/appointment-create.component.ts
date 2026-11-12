@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -29,7 +29,6 @@ import { DashboardService } from '../../services/dashboard.service';
   selector: 'vyracare-appointment-create-page',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     RouterLink,
     VcAutocompleteComponent,
@@ -40,7 +39,7 @@ import { DashboardService } from '../../services/dashboard.service';
     VcPhoneInputComponent,
     VcSelectComponent,
     VcTextComponent
-  ],
+],
   templateUrl: './appointment-create.component.html',
   styleUrl: './appointment-create.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

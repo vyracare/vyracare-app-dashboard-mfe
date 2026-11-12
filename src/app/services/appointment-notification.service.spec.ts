@@ -1,4 +1,4 @@
-import { discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { AppointmentNotificationService } from './appointment-notification.service';
 import { DashboardService } from './dashboard.service';
@@ -42,7 +42,8 @@ describe('AppointmentNotificationService', () => {
     expect(dashboardService.getDueNotifications).not.toHaveBeenCalled();
   });
 
-  it('should show and acknowledge due notifications', fakeAsync(() => {
+  it('should show and acknowledge due notifications', () => {
+    jest.useFakeTimers();
     const notificationConstructor = jest.fn();
     Object.assign(notificationConstructor, { permission: 'granted' });
     Object.defineProperty(window, 'Notification', { configurable: true, value: notificationConstructor });
@@ -52,27 +53,29 @@ describe('AppointmentNotificationService', () => {
     dashboardService.acknowledgeNotification.mockReturnValue(of(undefined));
 
     TestBed.inject(AppointmentNotificationService).start();
-    tick(0);
+    jest.advanceTimersByTime(0);
 
     expect(notificationConstructor).toHaveBeenCalledWith('Atendimento', expect.objectContaining({ body: 'Em uma hora' }));
     expect(dashboardService.acknowledgeNotification).toHaveBeenCalledWith('1');
-    discardPeriodicTasks();
-  }));
+    jest.useRealTimers();
+  });
 
-  it('should tolerate polling errors', fakeAsync(() => {
+  it('should tolerate polling errors', () => {
+    jest.useFakeTimers();
     const notificationConstructor = jest.fn();
     Object.assign(notificationConstructor, { permission: 'granted' });
     Object.defineProperty(window, 'Notification', { configurable: true, value: notificationConstructor });
     dashboardService.getDueNotifications.mockReturnValue(throwError(() => new Error('offline')));
 
     TestBed.inject(AppointmentNotificationService).start();
-    tick(0);
+    jest.advanceTimersByTime(0);
 
     expect(notificationConstructor).not.toHaveBeenCalled();
-    discardPeriodicTasks();
-  }));
+    jest.useRealTimers();
+  });
 
-  it('should not display notifications without permission or start twice', fakeAsync(() => {
+  it('should not display notifications without permission or start twice', () => {
+    jest.useFakeTimers();
     const notificationConstructor = jest.fn();
     Object.assign(notificationConstructor, { permission: 'denied' });
     Object.defineProperty(window, 'Notification', { configurable: true, value: notificationConstructor });
@@ -82,9 +85,9 @@ describe('AppointmentNotificationService', () => {
     const service = TestBed.inject(AppointmentNotificationService);
     service.start();
     service.start();
-    tick(0);
+    jest.advanceTimersByTime(0);
     expect(dashboardService.getDueNotifications).toHaveBeenCalledTimes(1);
     expect(notificationConstructor).not.toHaveBeenCalled();
-    discardPeriodicTasks();
-  }));
+    jest.useRealTimers();
+  });
 });

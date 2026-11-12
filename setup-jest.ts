@@ -1,4 +1,4 @@
-import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone/index.mjs';
+import { setupZonelessTestEnv } from 'jest-preset-angular/setup-env/zoneless';
 
 if (!globalThis.atob) {
   globalThis.atob = (data: string): string =>
@@ -10,4 +10,4 @@ if (!globalThis.btoa) {
     Buffer.from(data, 'binary').toString('base64');
 }
 
-setupZoneTestEnv();
+setupZonelessTestEnv();

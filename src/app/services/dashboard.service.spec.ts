@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { DashboardService } from './dashboard.service';
 import { environment } from '../../environments/environments';
@@ -10,7 +10,7 @@ describe('DashboardService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DashboardService, provideHttpClient(), provideHttpClientTesting()]
+      providers: [DashboardService, provideHttpClient(withXhr()), provideHttpClientTesting()]
     });
     service = TestBed.inject(DashboardService);
     http = TestBed.inject(HttpTestingController);

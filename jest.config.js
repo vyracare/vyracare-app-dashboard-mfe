@@ -22,7 +22,6 @@ module.exports = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, {
     prefix: '<rootDir>/'
   }),
-  resolver: 'jest-preset-angular/build/resolvers/ng-jest-resolver.js',
   testEnvironmentOptions: {
     customExportConditions: ['browser', 'module', 'default', 'node', 'jest']
   },
